@@ -24,7 +24,9 @@ gallery will show that plate.
     "community/<community-slug>"   a community's image
     "page/<name>"                  a page hero or one-off
 
-Page keys currently wired up: `page/homes`, `page/communities`,
+Page keys currently wired up: `page/homes` (the `/listings` hero — the key
+kept its old name), `page/faq`, `page/promotions`, `page/prequalify`,
+`page/address`, `page/blog`, `blog/<slug>`, `page/communities`,
 `page/start-here`, `page/why-manufactured`, `page/financing`, `page/about`,
 `page/contact`, `page/saved`, `page/not-found`, `page/home-closing` (the
 closing band on the homepage), and `page/about-team-1` … `page/about-team-4`.
@@ -49,9 +51,10 @@ that home's `scenes` array in `lib/homes.ts` so the gallery does not show an
 empty plate where it was. The file under `public/` can stay or go.
 
 **The homepage hero** is the one exception: it is imported directly in
-`app/page.tsx` so it can carry a blur placeholder and a fetch priority.
+`components/landing.tsx` so it can carry a blur placeholder and a fetch
+priority.
 Replace `public/photos/hero-home.jpg` in place, keeping the name, and update
-the `alt` text in `app/page.tsx` to describe the new photograph. Its framing
+the `alt` text in `components/landing.tsx` to describe the new photograph. Its framing
 is deliberately different on mobile and desktop — see the comment above it
 before changing `object-position`.
 

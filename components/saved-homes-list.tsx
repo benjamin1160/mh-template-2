@@ -37,7 +37,7 @@ export function SavedHomesList({ listings }: { listings: Listing[] }) {
           Tap the heart on any home and it lands here. The list lives in this browser, so
           it survives a refresh but never leaves your machine.
         </p>
-        <ButtonLink href="/homes" className="mt-8">
+        <ButtonLink href="/listings" className="mt-8">
           Browse the homes
           <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
         </ButtonLink>

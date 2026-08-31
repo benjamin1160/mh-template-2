@@ -32,19 +32,35 @@ enquiry form — renders but sits inert, and the page says so.
 
 | Route | What it does |
 | --- | --- |
-| `/` | Cinematic hero, myth-vs-fact section, nine-layer construction cutaway, five-step process, "no land? start here" band, communities, testimonials |
-| `/homes` | Faceted catalogue — search, price range, beds, baths, series, sections, style, availability, five sort orders, grid/list, URL-synced and shareable |
-| `/homes/[slug]` | Gallery with lightbox, scale floor plan with room dimensions, spec sheet, feature accordion, payment calculator, booking form, related homes, `SingleFamilyResidence` JSON-LD |
+| `/` | An ordered list of switchable bands — hero, offer banner, "no land? start here", the team, video, testimonials, five-step process, industry numbers, myth-vs-fact, nine-layer construction cutaway, featured homes, communities, closing CTA. Order and switches live in `components/landing.tsx` and `lib/page-config.ts` |
+| `/p/[slug]` | The same landing narrowed to one series — a campaign page that cannot drift away from the front page, because it is the front page |
+| `/listings` | Faceted catalogue — search, price range, beds, baths, series, sections, style, availability, five sort orders, grid/list, URL-synced and shareable |
+| `/listings/[slug]` | Gallery with lightbox, scale floor plan with room dimensions, spec sheet, feature accordion, payment calculator, booking form, related homes, `SingleFamilyResidence` JSON-LD |
 | `/communities` | Land-lease vs resident-owned vs fee-simple explainer, then each community with amenities and the homes sited there |
 | `/why-manufactured` | HUD Code timeline, manufactured/modular/site-built comparison table, HERS scale, an honest "where the sceptics are right" section, FAQ |
 | `/financing` | Six lending paths, the payment calculator, order of operations, FAQ |
 | `/land-deals` | An interactive map of every county in the delivery radius, shaded by what it takes to get into a home on land you own there, plus a pre-approval form that posts to a Server Action. `LocalBusiness` + `FAQPage` JSON-LD and its own social card |
 | `/start-here` | The buyer's guide for people who do not own land — the three routes onto ground, the order of operations, what you pay beyond the home, titling, FAQ |
+| `/new-home` | Build-a-home wizard: four questions, then the plans that actually fit. Owns the whole screen — no header CTA, no floating call button |
+| `/prequalify` | Pre-approval page — what a buyer gets for asking, the three steps, and the lead form that posts to a Server Action |
+| `/faq` | Every question in `lib/faq.ts` in full. The first six of the same list close `/why-manufactured` |
+| `/promotions` | Live offers from `lib/promotions.ts`, each with its end date. An expired offer drops off on its own; an empty page says so plainly |
+| `/blog`, `/blog/[slug]` | Notes from `lib/blog.ts`. Ships with no posts and the page switched off |
+| `/address` | Where the lot is, when it is open, who answers the phone, and the communities worth the drive |
 | `/about`, `/contact`, `/saved` | Company story, booking form, localStorage shortlist with a side-by-side comparison table |
+| `/privacy-policy`, `/terms` | Clauses from `lib/legal.ts`, with the business's own details substituted in. The only two routes with no switch |
 | `/sitemap.xml`, `/robots.txt`, `/opengraph-image` | Generated from the same data |
 
-Plus a themed 404, light/dark with no flash, and a full keyboard-accessible
-mobile nav.
+Plus a themed 404, light/dark with no flash, a floating call button, and a
+full keyboard-accessible mobile drawer that carries every route the header bar
+has no room for.
+
+Every route above except the two legal pages has a switch in
+`lib/page-config.ts`. Turning one off makes the route redirect to `/` — never
+404, because an indexed link or a printed card outlives the switch — and drops
+it from the header, the drawer, the footer and the sitemap at the same time.
+`/homes` and `/homes/[slug]` permanently redirect to `/listings`, where the
+catalogue used to live.
 
 ## Editing it by prompt
 
@@ -71,6 +87,17 @@ lib/
                     notes. Also optional; copy falls back to a portable
                     sentence. The cheapest way to make two deployments
                     genuinely differ.
+  page-config.ts    Which landing bands render, in what order, and which
+                    routes exist at all. The Page Manager for this site.
+  navigation.ts     The header bar, the mobile drawer and the footer links,
+                    all filtered through page-config.
+  faq.ts            The questions, shared by /faq and /why-manufactured.
+  promotions.ts     Live offers. Each carries its own end date and drops
+                    off the site the day after it passes. Ships empty.
+  blog.ts           Posts. Ships empty, with the page switched off.
+  custom-pages.ts   Campaign pages at /p/<slug> — the landing narrowed to
+                    one series. Ships empty.
+  legal.ts          Privacy and terms clauses. A draft, not legal advice.
   format.ts         Currency, feet-and-inches, amortisation maths.
   land/             The /land-deals map. areas.ts prices each county in the
                     delivery radius; geo.ts holds the lot's coordinates and
@@ -79,6 +106,8 @@ lib/
                     real census geometry, regenerated by script, never by
                     hand. Market data — replace it, do not ship it.
 components/
+  landing.tsx       The landing page as an ordered list of bands. `/` and
+                    every /p/<slug> render it, so they cannot drift apart.
   artwork/scene.tsx The single entry point for every image (see below)
   floor-plan.tsx    Renders lib/floor-plans.ts as an architectural drawing
   assembly-diagram.tsx

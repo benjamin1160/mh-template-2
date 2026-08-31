@@ -168,7 +168,7 @@ export function ListingCard({
       </div>
 
       <Link
-        href={`/homes/${listing.slug}`}
+        href={`/listings/${listing.slug}`}
         className="absolute inset-0 z-10"
         aria-label={`${listing.name} — ${priceText(listing.price)}`}
         prefetch={priority ? true : undefined}
@@ -179,7 +179,7 @@ export function ListingCard({
   );
 }
 
-/** Wide row used by the list view on /homes. */
+/** Wide row used by the list view on /listings. */
 export function ListingRow({ listing }: { listing: Listing }) {
   const community = listing.communitySlug ? getCommunity(listing.communitySlug) : undefined;
   const cover = coverKind(listing);
@@ -231,7 +231,7 @@ export function ListingRow({ listing }: { listing: Listing }) {
         </div>
       </div>
 
-      <Link href={`/homes/${listing.slug}`} className="absolute inset-0 z-10">
+      <Link href={`/listings/${listing.slug}`} className="absolute inset-0 z-10">
         <span className="sr-only">View {listing.name}</span>
       </Link>
     </article>

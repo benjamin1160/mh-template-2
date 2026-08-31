@@ -29,15 +29,19 @@ import { extractProse } from "./lib/prose.mjs";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BASELINE = join(root, "scripts", "boilerplate-baseline.json");
 
-/* The pages carrying editorial copy. Data-driven pages (`/homes`,
-   `/communities`) differ per deployment already, because the catalogue does. */
+/* The files carrying editorial copy. The landing page's own writing lives in
+   `components/landing.tsx` — `/` and every `/p/<slug>` render it — so that is
+   the file scored here rather than the two-line route that calls it.
+   Data-driven pages (`/listings`, `/communities`) differ per deployment
+   already, because the catalogue does. */
 const PAGES = [
-  "app/page.tsx",
+  "components/landing.tsx",
   "app/why-manufactured/page.tsx",
   "app/start-here/page.tsx",
   "app/land-deals/page.tsx",
   "app/financing/page.tsx",
   "app/contact/page.tsx",
+  "lib/faq.ts",
 ];
 
 const hash = (s) => createHash("sha256").update(s).digest("hex").slice(0, 16);

@@ -7,17 +7,8 @@ import { Logo } from "./logo";
 import { useSavedHomes } from "./saved-homes";
 import { ThemeToggle } from "./theme-toggle";
 import { buttonStyles, cx, Icon } from "./ui";
+import { drawerNav, primaryNav } from "@/lib/navigation";
 import { site } from "@/lib/site";
-
-const NAV = [
-  { href: "/homes", label: "Homes" },
-  { href: "/communities", label: "Communities" },
-  { href: "/land-deals", label: "Land + home" },
-  { href: "/start-here", label: "No land? Start here" },
-  { href: "/financing", label: "Financing" },
-  { href: "/why-manufactured", label: "Why manufactured" },
-  { href: "/about", label: "About" },
-];
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -84,7 +75,7 @@ export function SiteHeader() {
           </Link>
 
           <nav className="ml-auto hidden items-center gap-1 lg:flex" aria-label="Primary">
-            {NAV.map((item) => {
+            {primaryNav.map((item) => {
               const active =
                 pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
@@ -177,17 +168,25 @@ export function SiteHeader() {
         )}
         aria-hidden={!open}
       >
-        <nav className="flex h-full flex-col justify-center px-6 pb-24" aria-label="Mobile">
-          {NAV.map((item, i) => (
+        {/* Start-aligned rather than centred: the list is long enough on a
+            small screen to overflow, and a centred flex column puts its top
+            items out of scroll range when it does. */}
+        <nav
+          className="flex h-full flex-col overflow-y-auto px-6 pb-10 pt-24"
+          aria-label="Mobile"
+        >
+          {drawerNav.map((item, i) => (
             <Link
               key={item.href}
               href={item.href}
               tabIndex={open ? 0 : -1}
-              className="group flex items-baseline gap-4 border-b border-line py-5"
+              className="group flex items-baseline gap-4 border-b border-line py-4"
               style={{ transitionDelay: `${i * 40}ms` }}
             >
-              <span className="font-mono text-xs text-ember">0{i + 1}</span>
-              <span className="font-display text-4xl tracking-tight text-ink transition-transform duration-300 group-hover:translate-x-2">
+              <span className="font-mono text-xs text-ember">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="font-display text-3xl tracking-tight text-ink transition-transform duration-300 group-hover:translate-x-2 sm:text-4xl">
                 {item.label}
               </span>
             </Link>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { ListingCard } from "@/components/listing-card";
 import { ListingsBrowser } from "@/components/listings-browser";
@@ -7,6 +8,7 @@ import { Container } from "@/components/ui";
 import { hasPrices, listings, priceBounds } from "@/lib/homes";
 import { money } from "@/lib/format";
 import { site } from "@/lib/site";
+import { pages } from "@/lib/page-config";
 
 export const metadata: Metadata = {
   title: "Homes for sale",
@@ -26,6 +28,10 @@ function BrowserFallback() {
 }
 
 export default function HomesPage() {
+  /* Turned off in `lib/page-config.ts`, this route sends visitors home rather
+     than 404ing — an indexed link or a printed card outlives the switch. */
+  if (!pages.listings) redirect("/");
+
   return (
     <>
       <PageHero
@@ -47,7 +53,7 @@ export default function HomesPage() {
         kind="exterior"
         breadcrumb={[
           { href: "/", label: "Home" },
-          { href: "/homes", label: "Homes" },
+          { href: "/listings", label: "Homes" },
         ]}
       />
 

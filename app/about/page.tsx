@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Scene } from "@/components/artwork/scene";
 import { CountUp } from "@/components/count-up";
 import { PageHero } from "@/components/page-hero";
@@ -15,6 +16,7 @@ import { communities } from "@/lib/communities";
 import { company, spellCount, yearsTrading } from "@/lib/company";
 import { listings, seriesList } from "@/lib/homes";
 import { site } from "@/lib/site";
+import { pages } from "@/lib/page-config";
 
 /* Every section below is conditional on the matching field in
    `lib/company.ts`. A dealership that publishes nothing about its staff or
@@ -36,6 +38,10 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  /* Turned off in `lib/page-config.ts`, this route sends visitors home rather
+     than 404ing — an indexed link or a printed card outlives the switch. */
+  if (!pages.about) redirect("/");
+
   const years = yearsTrading();
 
   /* Section numbering has to survive a missing section, so it counts up as

@@ -29,7 +29,7 @@ export default function NotFound() {
           still full.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
-          <ButtonLink href="/homes" className="!px-7 !py-4 !text-base">
+          <ButtonLink href="/listings" className="!px-7 !py-4 !text-base">
             Browse the homes
             <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
           </ButtonLink>

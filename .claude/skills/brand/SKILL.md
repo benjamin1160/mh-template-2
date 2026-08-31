@@ -75,15 +75,50 @@ file as a named constant where it repeats:
 
 | Page | File |
 | --- | --- |
-| Homepage — hero, myth/fact, process, ticker, testimonials | `app/page.tsx` |
+| Homepage — hero, myth/fact, process, ticker, testimonials | `components/landing.tsx` (`app/page.tsx` only calls it, and every `/p/<slug>` calls it too) |
+| Which homepage bands appear, in what order, and which routes exist | `lib/page-config.ts` |
+| Header, mobile drawer and footer links | `lib/navigation.ts` |
+| The questions — `/faq` and the foot of `/why-manufactured` | `lib/faq.ts` |
+| Live offers — the homepage banner and `/promotions` | `lib/promotions.ts` |
+| Privacy policy and terms | `lib/legal.ts` |
 | Why manufactured — timeline, comparison, FAQ | `app/why-manufactured/page.tsx` |
 | Financing — lending paths, order of operations, FAQ | `app/financing/page.tsx` |
 | About — story, team, values | `lib/company.ts` (the claims), `app/about/page.tsx` (the layout) |
 | Contact | `app/contact/page.tsx` |
-| Header and footer navigation | `components/site-header.tsx`, `components/site-footer.tsx` |
+| Header and footer chrome (the markup, not the links) | `components/site-header.tsx`, `components/site-footer.tsx` |
 
 Copy about a specific home belongs on the listing in `lib/homes.ts`, not in
 a page — see the `homes` skill.
+
+## Which pages and bands exist
+
+`lib/page-config.ts` is this site's page manager, and editing it is the
+supported way to shorten a site — not deleting a route or commenting a band
+out of `components/landing.tsx`, because the next deployment wants it back.
+
+- `sections` lists the landing-page bands **in render order**. Set one to
+  `false` and it stops rendering. Reorder the site by moving a band in the
+  `bands` array in `components/landing.tsx`; the numbered eyebrows renumber
+  themselves from what survives, so 01, 02, 03 stays contiguous.
+- `pages` lists the standalone routes. Set one to `false` and the route
+  redirects to `/` — never 404, because an indexed link or a printed card
+  outlives the switch — and its links vanish from the header, the drawer,
+  the footer and the sitemap in the same move.
+- `/privacy-policy` and `/terms` have no switch, on purpose.
+
+Three bands are gated by their data as well as their switch, and stay hidden
+when it is missing: `promotion` needs a live offer in `lib/promotions.ts`,
+`meetTeam` needs somebody in `company.team`, and `videoShowcase` needs a URL
+in `videoShowcase`. That is the same rule as everywhere else here — an absent
+fact shortens the page and is never invented to fill it.
+
+Turning a page on is not enough on its own where the page has no content:
+`/blog` needs a post in `lib/blog.ts` and `/promotions` reads honestly empty
+until an offer is written. Write the content, then flip the switch.
+
+Campaign pages live at `/p/<slug>` and are configured in
+`lib/custom-pages.ts`. Each one is the landing page with the listings band
+narrowed to a single `series`, so it cannot drift away from the front page.
 
 The content shipped with the template is fictional and its construction and
 HUD Code claims are illustrative. When rebranding for a real business, treat

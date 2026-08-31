@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { SavedHomesList } from "@/components/saved-homes-list";
 import { PageHero } from "@/components/page-hero";
 import { Container } from "@/components/ui";
 import { listings } from "@/lib/homes";
+import { pages } from "@/lib/page-config";
 
 export const metadata: Metadata = {
   title: "Saved homes",
@@ -11,6 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default function SavedPage() {
+  /* Turned off in `lib/page-config.ts`, this route sends visitors home rather
+     than 404ing — an indexed link or a printed card outlives the switch. */
+  if (!pages.saved) redirect("/");
+
   return (
     <>
       <PageHero

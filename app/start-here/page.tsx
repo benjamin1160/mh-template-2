@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Accordion } from "@/components/accordion";
 import { PageHero } from "@/components/page-hero";
@@ -15,6 +16,7 @@ import {
 import { communities } from "@/lib/communities";
 import { listings } from "@/lib/homes";
 import { site } from "@/lib/site";
+import { pages } from "@/lib/page-config";
 
 export const metadata: Metadata = {
   title: "No land? Start here",
@@ -215,6 +217,10 @@ const FAQ = [
 ];
 
 export default function StartHerePage() {
+  /* Turned off in `lib/page-config.ts`, this route sends visitors home rather
+     than 404ing — an indexed link or a printed card outlives the switch. */
+  if (!pages.startHere) redirect("/");
+
   const smallest = Math.min(...listings.map((l) => l.sqft));
 
   return (
@@ -404,7 +410,7 @@ export default function StartHerePage() {
                 Book a walkthrough
                 <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </ButtonLink>
-              <ButtonLink href="/homes" variant="outline" className="!px-7 !py-4 !text-base">
+              <ButtonLink href="/listings" variant="outline" className="!px-7 !py-4 !text-base">
                 See every plan
               </ButtonLink>
             </div>

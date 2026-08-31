@@ -2,32 +2,49 @@ import Link from "next/link";
 import { Logo } from "./logo";
 import { communities } from "@/lib/communities";
 import { Container, Icon } from "./ui";
+import { legalNav, secondaryNav } from "@/lib/navigation";
+import { pages } from "@/lib/page-config";
 import { site } from "@/lib/site";
 
-const COLUMNS = [
+/* Deep links into pages the header does not have room for. Each carries the
+   switch that governs it, so a column empties out rather than pointing at a
+   route that redirects — see `lib/page-config.ts`. */
+const COLUMNS: { title: string; links: { href: string; label: string; page?: keyof typeof pages }[] }[] = [
   {
     title: "Homes",
     links: [
-      { href: "/homes", label: "All homes" },
-      { href: "/homes?series=TRU", label: "TRU series" },
-      { href: "/homes?series=NXT", label: "NXT series" },
-      { href: "/homes?series=CrossMod", label: "CrossMod homes" },
-      { href: "/saved", label: "Saved homes" },
+      { href: "/listings", label: "All homes", page: "listings" },
+      { href: "/listings?series=TRU", label: "TRU series", page: "listings" },
+      { href: "/listings?series=NXT", label: "NXT series", page: "listings" },
+      { href: "/listings?series=CrossMod", label: "CrossMod homes", page: "listings" },
+      { href: "/new-home", label: "Build a home", page: "buildAHome" },
+      { href: "/saved", label: "Saved homes", page: "saved" },
     ],
   },
   {
     title: "Buying",
     links: [
-      { href: "/start-here", label: "No land? Start here" },
-      { href: "/land-deals", label: "Land + home prices" },
-      { href: "/financing", label: "Financing" },
-      { href: "/financing#calculator", label: "Payment calculator" },
-      { href: "/why-manufactured", label: "Why manufactured" },
-      { href: "/why-manufactured#faq", label: "Common questions" },
-      { href: "/contact", label: "Book a walkthrough" },
+      { href: "/start-here", label: "No land? Start here", page: "startHere" },
+      { href: "/land-deals", label: "Land + home prices", page: "landDeals" },
+      { href: "/financing", label: "Financing", page: "financing" },
+      { href: "/financing#calculator", label: "Payment calculator", page: "financing" },
+      { href: "/prequalify", label: "Get pre-approved", page: "prequalify" },
+      { href: "/why-manufactured", label: "Why manufactured", page: "whyManufactured" },
+      { href: "/faq", label: "Common questions", page: "faq" },
+      { href: "/contact", label: "Book a walkthrough", page: "contact" },
     ],
   },
 ];
+
+const columns = COLUMNS.map((col) => ({
+  ...col,
+  links: col.links.filter((l) => !l.page || pages[l.page]),
+})).filter((col) => col.links.length > 0);
+
+/* Anything in the header's overflow list that has not already appeared in a
+   column above. Keeps `/promotions`, `/blog` and `/address` reachable. */
+const used = new Set(columns.flatMap((col) => col.links.map((l) => l.href)));
+const more = secondaryNav.filter((item) => !used.has(item.href));
 
 export function SiteFooter() {
   return (
@@ -51,7 +68,7 @@ export function SiteFooter() {
             <p className="mt-3 font-mono text-sm text-ink">{site.phone}</p>
           </div>
 
-          {COLUMNS.map((col) => (
+          {columns.map((col) => (
             <div key={col.title}>
               <h3 className="eyebrow">{col.title}</h3>
               <ul className="mt-6 space-y-3.5">
@@ -70,29 +87,65 @@ export function SiteFooter() {
           ))}
 
           <div>
-            <h3 className="eyebrow">Communities</h3>
-            <ul className="mt-6 space-y-3.5">
-              {communities.map((c) => (
-                <li key={c.slug}>
+            {pages.communities && communities.length > 0 && (
+              <>
+                <h3 className="eyebrow">Communities</h3>
+                <ul className="mt-6 space-y-3.5">
+                  {communities.map((c) => (
+                    <li key={c.slug}>
+                      <Link
+                        href={`/communities#${c.slug}`}
+                        className="text-[0.95rem] text-ink-soft transition-colors hover:text-ember"
+                      >
+                        {c.name}
+                        <span className="ml-2 font-mono text-xs text-muted">
+                          {c.city}, {c.state}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {more.length > 0 && (
+              <div className={pages.communities && communities.length > 0 ? "mt-10" : ""}>
+                <h3 className="eyebrow">More</h3>
+                <ul className="mt-6 space-y-3.5">
+                  {more.map((item) => (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className="text-[0.95rem] text-ink-soft transition-colors hover:text-ember"
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-16 flex flex-col gap-6 border-t border-line pt-8 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5">
+            <p>
+              © {new Date().getFullYear()} {site.name}. All rights reserved.
+            </p>
+            <ul className="flex flex-wrap items-center gap-5">
+              {legalNav.map((item) => (
+                <li key={item.href}>
                   <Link
-                    href={`/communities#${c.slug}`}
-                    className="text-[0.95rem] text-ink-soft transition-colors hover:text-ember"
+                    href={item.href}
+                    className="underline underline-offset-4 transition-colors hover:text-ink"
                   >
-                    {c.name}
-                    <span className="ml-2 font-mono text-xs text-muted">
-                      {c.city}, {c.state}
-                    </span>
+                    {item.label}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-        </div>
-
-        <div className="mt-16 flex flex-col gap-6 border-t border-line pt-8 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {new Date().getFullYear()} {site.name}. All rights reserved.
-          </p>
           <p className="max-w-xl leading-relaxed">
             Demonstration site. Hearthline Home Co. is a fictional dealership; Clayton,
             the plan names shown and YES! Communities are the marks of their respective

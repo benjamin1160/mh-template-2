@@ -16,6 +16,19 @@ lib/communities.ts  Communities, tenure, lot rents, amenities.
 lib/photos.ts       Every photograph on the site, by key. Absent key =
                     an empty plate; the site shows photographs only.
 lib/site.ts         Business name, phone, address, canonical URL.
+lib/page-config.ts  Which bands the landing page renders, in what order,
+                    and which routes exist at all. Turning a page off
+                    redirects it to `/` and removes its links everywhere.
+lib/navigation.ts   Header, drawer and footer links, filtered through
+                    page-config. Add a route here, not as a stray anchor.
+lib/faq.ts          The questions. `/faq` shows all of them, the foot of
+                    `/why-manufactured` shows the first six.
+lib/promotions.ts   Live offers, each with an end date. Ships empty.
+lib/blog.ts         Posts. Ships empty; `/blog` is switched off to match.
+lib/custom-pages.ts Campaign pages at `/p/<slug>` — the landing page
+                    narrowed to one series. Ships empty.
+lib/legal.ts        Privacy and terms clauses. A draft to be reviewed by
+                    a lawyer, not legal advice.
 lib/company.ts      What the business claims about itself — founding year,
                     staff, principles, warranty, deposit terms. Every field
                     optional; an absent one hides its section rather than
@@ -29,7 +42,15 @@ lib/land/           Everything behind /land-deals: `areas.ts` prices each
                     holds the county boundaries. Market data in the sense
                     above — true of one radius and of no other.
 app/globals.css     Design tokens — the whole palette, light and dark.
+components/landing.tsx
+                    The landing page, as an ordered list of switchable
+                    bands. `/` and every `/p/<slug>` render it — edit the
+                    band here and both follow. The order lives in this
+                    file and nowhere else.
 ```
+
+The catalogue is at `/listings`; `/homes` permanently redirects there. The
+data file is still `lib/homes.ts` — the route was renamed, the file was not.
 
 Detailed conventions and recipes are in `.claude/skills/` — `homes`,
 `photos`, `brand`, `voice` and `land-deals`. Read the matching one before
@@ -42,9 +63,9 @@ its founding year, its staff or its warranty terms, delete the field in
 (part of `npm run lint`) lists the template's fictional values still in
 place, and fails outright once `NEXT_PUBLIC_SITE_URL` is a real domain.
 
-Roughly 4,800 words of editorial copy on `/`, `/why-manufactured`,
-`/start-here`, `/land-deals` and `/financing` are the template's own
-writing, and every deployment ships them identically. That is fine for one site and a problem
+Roughly 4,900 words of editorial copy in `components/landing.tsx`,
+`lib/faq.ts` and on `/why-manufactured`, `/start-here`, `/land-deals` and
+`/financing` are the template's own writing, and every deployment ships them identically. That is fine for one site and a problem
 for the second one sold into the same market. `npm run check:boilerplate`
 scores how much is still verbatim; the `voice` skill does the rewrite, which
 keeps a locked list of facts intact.

@@ -36,7 +36,8 @@ rows, no zeroes, no placeholder prices.
 
 - `price` (absent renders as "Call for pricing" everywhere, and drops the
   payment calculator), `wasPrice` (strikethrough)
-- `series` — free text; the facet list on /homes derives from what is used
+- `series` — free text; the facet list on /listings derives from what is used,
+  and `lib/custom-pages.ts` points a `/p/<slug>` campaign page at one of them
 - `model`, `year`, `daysListed` (≤ 10 shows a "Just listed" badge)
 - `sections` — `single` | `double` | `triple`
 - `widthFt`, `lengthFt` — transport dimensions

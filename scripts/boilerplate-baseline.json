@@ -1,5 +1,5 @@
 {
-  "app/page.tsx": {
+  "components/landing.tsx": {
     "words": 931,
     "hashes": [
       "c2c0849172c9e775",
@@ -31,16 +31,16 @@
       "f0700bb1c5f379f9",
       "ed12b500991a6d09",
       "32a56bdaa49b9e40",
+      "8532f19f5fb60605",
+      "43839c0c028cf5ba",
       "14adc5d14d8ac72c",
       "1119e5e259f73367",
       "8af01159462e88ab",
-      "4fe3de5afe529e4e",
-      "8532f19f5fb60605",
-      "43839c0c028cf5ba"
+      "4fe3de5afe529e4e"
     ]
   },
   "app/why-manufactured/page.tsx": {
-    "words": 1011,
+    "words": 633,
     "hashes": [
       "c1d8f204fcf5dad1",
       "eff9ce89031e2bbe",
@@ -56,18 +56,10 @@
       "551f4c271ebd2b36",
       "e290cc526df59906",
       "f968c0191966d39d",
-      "5ad42a733e485777",
       "88970eeacb08420d",
       "2069550ca3657f76",
       "1eee3d2bc9a9824d",
       "0753559d6214efd4",
-      "71437e063a201e20",
-      "0b79ca345a36885e",
-      "601c2dfca2e747a9",
-      "fdb9bb42bb5a6ed1",
-      "603e3f71c473ff06",
-      "20b35363f5e22a80",
-      "dd96fb050051e68e",
       "bfb59f87ce053438",
       "e2b89f2c69121940",
       "effaf13ac49b546e",
@@ -194,6 +186,22 @@
       "8152e6a0bac81de8",
       "e8db0cac9e236685",
       "a6e2e0a52c2e1ae8"
+    ]
+  },
+  "lib/faq.ts": {
+    "words": 486,
+    "hashes": [
+      "5ad42a733e485777",
+      "c9515a8c5f6fb04b",
+      "0b79ca345a36885e",
+      "601c2dfca2e747a9",
+      "fdb9bb42bb5a6ed1",
+      "603e3f71c473ff06",
+      "20b35363f5e22a80",
+      "dd96fb050051e68e",
+      "8b13945df0c0cbb1",
+      "0e84b6f3b565b978",
+      "1c6abd87376d79a8"
     ]
   }
 }
