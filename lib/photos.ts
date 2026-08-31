@@ -44,7 +44,8 @@
  * `page/start-here`, `page/why-manufactured`, `page/financing`,
  * `page/faq`, `page/prequalify`, `page/promotions`, `page/blog`,
  * `page/address`, `page/about`, `page/contact`, `page/saved`,
- * `page/not-found`, `page/home-closing` (the closing band on the homepage),
+ * `page/not-found`, `page/home-closing` (the wide band under the hero),
+ * `page/reviews` (behind the testimonials),
  * `page/about-team-1` … `page/about-team-4`, and `blog/<slug>` for a post's
  * hero. Every one of those with no photograph renders as the empty plate,
  * which is the correct outcome — it is never filled with a stand-in.
@@ -152,6 +153,7 @@ export const photos: Record<string, string> = {
   "willow/living": "/photos/homes/willow/living.webp",
   "page/homes": "/photos/homes/double-maxx-elite-64/exterior.webp",
   "page/communities": "/photos/homes/haven/exterior.webp",
+  "page/reviews": "/photos/homes/breeze/living.webp",
   "page/why-manufactured": "/photos/homes/double-maxx-elite-56/exterior.webp",
   "page/financing": "/photos/homes/breeze/exterior.webp",
   "page/start-here": "/photos/homes/everett/exterior.webp",

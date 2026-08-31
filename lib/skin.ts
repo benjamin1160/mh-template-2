@@ -26,8 +26,18 @@
 
 export type SkinId = "hearthline" | "nerto";
 
-/** Font stacks a skin can choose between. Loaded in `app/layout.tsx`. */
-export type FontChoice = "display-serif" | "ui-sans" | "grotesk" | "mono";
+/**
+ * Font stacks a skin can choose between. All but `system` are self-hosted by
+ * `next/font` in `app/layout.tsx`; `system` downloads nothing and renders in
+ * whatever the reader's device calls its interface face, which is what a site
+ * built to load instantly on a phone on a rural connection actually wants.
+ */
+export type FontChoice =
+  | "display-serif"
+  | "ui-sans"
+  | "grotesk"
+  | "mono"
+  | "system";
 
 export type SkinPalette = {
   /** Page background. */
@@ -50,6 +60,11 @@ export type SkinPalette = {
   ember: string;
   /** A lighter accent for hover states and decoration. */
   emberSoft: string;
+  /** The palest wash of the accent — tinted panels, selected chips. */
+  emberWash: string;
+  /** The second brand colour. Paired with `ember` in `gradient` below. */
+  accent: string;
+  accentSoft: string;
   /** The secondary colour — confirmations, "available" badges. */
   moss: string;
   mossSoft: string;
@@ -61,6 +76,24 @@ export type SkinPalette = {
   onEmber: string;
   /** Shadow colour as space-separated RGB, e.g. "15 23 42". */
   shadowColor: string;
+};
+
+/**
+ * The two-stop brand gradient, and the shadows cast by the things wearing it.
+ *
+ * A flat primary and a gradient primary are different design languages, not
+ * different values of one, which is why this is its own optional block: a
+ * skin that omits it gets flat `ember` everywhere and nothing to maintain.
+ * `gradient` is a full CSS value, so a skin can use three stops or a
+ * different angle without the type changing.
+ */
+export type SkinGradient = {
+  gradient: string;
+  gradientHover: string;
+  /** Cast by primary buttons. Usually the accent at 40%. */
+  buttonShadow: string;
+  /** Cast by raised cards. */
+  cardShadow: string;
 };
 
 /**
@@ -105,6 +138,8 @@ export type Skin = {
   landDark?: SkinLandPalette;
   button?: SkinButton;
   buttonDark?: SkinButton;
+  gradient?: SkinGradient;
+  gradientDark?: SkinGradient;
   fonts: {
     /** Headlines. */
     display: FontChoice;
@@ -143,6 +178,9 @@ export const skins: Record<SkinId, Skin> = {
       lineStrong: "#cabfae",
       ember: "#b8461c",
       emberSoft: "#e07a45",
+      emberWash: "#f8ece5",
+      accent: "#b58436",
+      accentSoft: "#d0a45c",
       moss: "#2f4a3c",
       mossSoft: "#5d8a71",
       sky: "#2b5f7e",
@@ -161,6 +199,9 @@ export const skins: Record<SkinId, Skin> = {
       lineStrong: "#453d34",
       ember: "#e9853f",
       emberSoft: "#f2a66e",
+      emberWash: "#2a1d13",
+      accent: "#d8ac5f",
+      accentSoft: "#e6c68d",
       moss: "#86b598",
       mossSoft: "#5d8a71",
       sky: "#7fb4d1",
@@ -173,16 +214,31 @@ export const skins: Record<SkinId, Skin> = {
   },
 
   /**
-   * The conversion-shaped look Mobile Home Manager deployments wear: white
-   * ground, slate text, a blue primary and a green "go" colour, set in a
-   * grotesk. Louder and flatter than Hearthline on purpose — it is built to
-   * be scanned and acted on rather than read.
+   * The look a Mobile Home Manager deployment wears, taken from a live one
+   * rather than guessed at: white ground, slate type, a blue primary that
+   * runs to an orange accent across every primary button, and a system sans
+   * throughout. Louder and flatter than Hearthline on purpose — it is built
+   * to be scanned and acted on rather than read.
+   *
+   * The values are the `custom` skin as that engine resolves it. Its own
+   * token names map onto this file's as follows, so the two stay comparable
+   * when either moves:
+   *
+   *   background #FFFFFF -> paper          text       #0F172A -> ink
+   *   backgroundAlt      -> surface        textMuted  #64748B -> muted
+   *   surfaceHover       -> surface2       textLight  #94A3B8 -> (unused)
+   *   border   #E2E8F0   -> line           primary    #0061ff -> ember
+   *   success  #10B981   -> moss           accent     #ffb43f -> accent
+   *
+   * There is no dark theme on the original — it is a white site. The block
+   * below is this template's own, because the toggle in the header has to
+   * lead somewhere; it keeps the same blue and orange against slate.
    */
   nerto: {
     id: "nerto",
     name: "Direct",
     description:
-      "White ground, slate text, blue primary and a green call to action, set in a grotesk. Built to be scanned and acted on.",
+      "White ground, slate type, a blue-to-orange gradient on every primary button, set in the system sans. Built to be scanned and acted on.",
     light: {
       paper: "#ffffff",
       surface: "#f8fafc",
@@ -192,15 +248,18 @@ export const skins: Record<SkinId, Skin> = {
       muted: "#64748b",
       line: "#e2e8f0",
       lineStrong: "#cbd5e1",
-      ember: "#2563eb",
-      emberSoft: "#60a5fa",
-      /* The green is the "go" colour on the buttons that ask for a call or a
-         quote. #4ade80 is too light to carry text, so the readable shade is
-         the token and the bright one is its soft pair. */
-      moss: "#16a34a",
+      ember: "#0061ff",
+      emberSoft: "#2563eb",
+      emberWash: "#eff6ff",
+      accent: "#ffb43f",
+      accentSoft: "#ffaa00",
+      /* The green is the tick beside "Financing available" and every other
+         reassurance on the page. #4ade80 is too light to carry text, so the
+         readable shade is the token and the bright one is its soft pair. */
+      moss: "#10b981",
       mossSoft: "#4ade80",
       sky: "#0ea5e9",
-      gold: "#ffb43f",
+      gold: "#f59e0b",
       onEmber: "#ffffff",
       shadowColor: "15 23 42",
     },
@@ -213,13 +272,16 @@ export const skins: Record<SkinId, Skin> = {
       muted: "#94a3b8",
       line: "#1e293b",
       lineStrong: "#334155",
-      ember: "#60a5fa",
-      emberSoft: "#93c5fd",
-      moss: "#4ade80",
-      mossSoft: "#86efac",
+      ember: "#3b82f6",
+      emberSoft: "#60a5fa",
+      emberWash: "#12203a",
+      accent: "#ffb43f",
+      accentSoft: "#ffc76d",
+      moss: "#34d399",
+      mossSoft: "#6ee7b7",
       sky: "#38bdf8",
       gold: "#fbbf24",
-      onEmber: "#0b1220",
+      onEmber: "#ffffff",
       shadowColor: "0 0 0",
     },
     landLight: {
@@ -228,9 +290,9 @@ export const skins: Record<SkinId, Skin> = {
       outside: "#cbd5e1",
       overBudget: "#eef2f7",
       stroke: "#ffffff",
-      price: "#1d4ed8",
+      price: "#0061ff",
       tier1: "#1e3a8a",
-      tier2: "#1d4ed8",
+      tier2: "#0061ff",
       tier3: "#3b82f6",
       tier4: "#7dabf8",
       tier5: "#bfd7fd",
@@ -241,18 +303,30 @@ export const skins: Record<SkinId, Skin> = {
       outside: "#131c30",
       overBudget: "#121a2c",
       stroke: "#0b1220",
-      price: "#fbbf24",
+      price: "#ffb43f",
       tier1: "#93c5fd",
       tier2: "#60a5fa",
       tier3: "#3b82f6",
       tier4: "#2563eb",
       tier5: "#1e40af",
     },
-    /* Blue at rest, green on hover — the blue is the brand and the green is
-       the "go". This is the one place the two are used as a pair. */
-    button: { bg: "#2563eb", fg: "#ffffff", hoverBg: "#16a34a", hoverFg: "#ffffff" },
-    buttonDark: { bg: "#2563eb", fg: "#ffffff", hoverBg: "#16a34a", hoverFg: "#ffffff" },
-    fonts: { display: "grotesk", sans: "grotesk", mono: "mono" },
+    /* Primary buttons wear the gradient below rather than a flat fill, so
+       these two are only what a plain `bg-[var(--btn-bg)]` falls back to. */
+    button: { bg: "#0061ff", fg: "#ffffff", hoverBg: "#2563eb", hoverFg: "#ffffff" },
+    buttonDark: { bg: "#3b82f6", fg: "#ffffff", hoverBg: "#60a5fa", hoverFg: "#ffffff" },
+    gradient: {
+      gradient: "linear-gradient(135deg, #0061ff 0%, #ffb43f 100%)",
+      gradientHover: "linear-gradient(135deg, #2563eb 0%, #ffaa00 100%)",
+      buttonShadow: "0 10px 25px -5px rgba(0, 97, 255, 0.4)",
+      cardShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+    },
+    gradientDark: {
+      gradient: "linear-gradient(135deg, #3b82f6 0%, #ffb43f 100%)",
+      gradientHover: "linear-gradient(135deg, #60a5fa 0%, #ffc76d 100%)",
+      buttonShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.45)",
+      cardShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.5)",
+    },
+    fonts: { display: "system", sans: "system", mono: "system" },
     radius: { button: "0.75rem", card: "1rem" },
   },
 };
@@ -279,6 +353,9 @@ const PALETTE_VARS: [keyof SkinPalette, string][] = [
   ["lineStrong", "--line-strong"],
   ["ember", "--ember"],
   ["emberSoft", "--ember-soft"],
+  ["emberWash", "--ember-wash"],
+  ["accent", "--accent"],
+  ["accentSoft", "--accent-soft"],
   ["moss", "--moss"],
   ["mossSoft", "--moss-soft"],
   ["sky", "--sky"],
@@ -301,6 +378,18 @@ const LAND_VARS: [keyof SkinLandPalette, string][] = [
   ["tier5", "--land-tier-5"],
 ];
 
+const gradientVars = (g: SkinGradient | undefined) =>
+  g
+    ? [
+        `--gradient:${g.gradient}`,
+        `--gradient-hover:${g.gradientHover}`,
+        `--btn-gradient:${g.gradient}`,
+        `--btn-gradient-hover:${g.gradientHover}`,
+        `--button-shadow:${g.buttonShadow}`,
+        `--card-shadow:${g.cardShadow}`,
+      ]
+    : [];
+
 const buttonVars = (button: SkinButton | undefined) =>
   button
     ? [
@@ -315,6 +404,7 @@ const block = (
   palette: SkinPalette,
   land: SkinLandPalette | undefined,
   button: SkinButton | undefined,
+  gradient: SkinGradient | undefined,
 ) =>
   [
     ...PALETTE_VARS.map(([key, cssVar]) => `${cssVar}:${palette[key]}`),
@@ -322,6 +412,7 @@ const block = (
       land?.[key] ? [`${cssVar}:${land[key]}`] : [],
     ),
     ...buttonVars(button),
+    ...gradientVars(gradient),
   ].join(";");
 
 /**
@@ -334,8 +425,8 @@ const block = (
  */
 export function skinStyles(active: Skin = skin): string {
   return [
-    `:root:root{${block(active.light, active.landLight, active.button)};` +
+    `:root:root{${block(active.light, active.landLight, active.button, active.gradient)};` +
       `--corner-button:${active.radius.button};--corner-card:${active.radius.card}}`,
-    `:root:root.dark{${block(active.dark, active.landDark, active.buttonDark ?? active.button)}}`,
+    `:root:root.dark{${block(active.dark, active.landDark, active.buttonDark ?? active.button, active.gradientDark ?? active.gradient)}}`,
   ].join("");
 }

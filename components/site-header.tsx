@@ -7,38 +7,30 @@ import { CallBar } from "./call-bar";
 import { Logo } from "./logo";
 import { useSavedHomes } from "./saved-homes";
 import { ThemeToggle } from "./theme-toggle";
-import { buttonStyles, cx, Icon } from "./ui";
+import { cx, Icon } from "./ui";
 import { drawerNav, primaryNav } from "@/lib/navigation";
 import { callBar } from "@/lib/page-config";
 import { site } from "@/lib/site";
 
+/**
+ * The header: a phone strip, then a white bar that sticks to the top of the
+ * viewport as the page scrolls under it.
+ *
+ * Sticky rather than fixed, and opaque rather than transparent-over-the-hero.
+ * That is the whole difference between a header that behaves like furniture
+ * and one that behaves like a magazine cover, and it is the pattern every
+ * conversion-shaped site in this market uses: the phone number and the quote
+ * button are never more than a flick away, and nothing below has to leave a
+ * hole for the bar to sit in.
+ *
+ * Because it is in flow, no page needs top padding to clear it. `--chrome-h`
+ * survives for the two things that still have to know its height: sticky
+ * rails that park beneath it, and `scroll-margin` on anchored sections.
+ */
 export function SiteHeader() {
   const pathname = usePathname();
-  const [overlay, setOverlay] = useState(false);
   const [open, setOpen] = useState(false);
   const { saved, ready } = useSavedHomes();
-
-  /* Routes that open on a dark full-bleed scene mark it with
-     `data-hero-scrim`. While that element is still under the bar, the bar
-     stays transparent with light text; everywhere else it is a solid
-     surface from the first pixel. */
-  useEffect(() => {
-    const update = () => {
-      const hero = document.querySelector<HTMLElement>("[data-hero-scrim]");
-      /* Measured rather than assumed: the chrome is a nav bar on its own on
-         some deployments and a nav bar under a phone strip on others. */
-      const chrome =
-        document.querySelector<HTMLElement>("header")?.getBoundingClientRect().height ?? 96;
-      setOverlay(!!hero && hero.getBoundingClientRect().bottom > chrome + 16);
-    };
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-    };
-  }, [pathname]);
 
   /* Close the drawer on navigation by adjusting state during render, which
      avoids the cascading re-render an effect would cause. */
@@ -48,8 +40,6 @@ export function SiteHeader() {
     if (open) setOpen(false);
   }
 
-  const solid = !overlay || open;
-
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -57,136 +47,95 @@ export function SiteHeader() {
     };
   }, [open]);
 
+  const iconButton =
+    "inline-flex size-10 items-center justify-center rounded-lg text-ink-soft transition-colors hover:bg-surface-2 hover:text-ink";
+
   return (
     <>
       <a
         href="#main"
-        className="sr-only rounded-full bg-ink px-4 py-2 text-paper focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60]"
+        className="sr-only rounded-lg bg-ink px-4 py-2 text-paper focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60]"
       >
         Skip to content
       </a>
 
-      <header className="fixed inset-x-0 top-0 z-50">
-        {/* Always opaque, hero or no hero — it is the phone number, and a
-            transparent strip over a photograph is the one place it would stop
-            being readable. */}
+      <header className="sticky top-0 z-50">
         {callBar && <CallBar />}
 
-        <div
-          className={cx(
-            "transition-[background-color,border-color,backdrop-filter,color] duration-500",
-            solid
-              ? "border-b border-line bg-paper/85 text-ink backdrop-blur-xl"
-              : "border-b border-transparent text-white",
-          )}
-        >
-        <div className="mx-auto flex h-[var(--header-h)] w-full max-w-[88rem] items-center gap-6 px-5 sm:px-8 lg:px-12">
-          <Link href="/" className="shrink-0 transition-opacity hover:opacity-70">
-            <Logo />
-            <span className="sr-only">{site.name} — home</span>
-          </Link>
-
-          <nav className="ml-auto hidden items-center gap-1 lg:flex" aria-label="Primary">
-            {primaryNav.map((item) => {
-              const active =
-                pathname === item.href || pathname.startsWith(`${item.href}/`);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  aria-current={active ? "page" : undefined}
-                  className={cx(
-                    "relative rounded-full px-3.5 py-2 text-[0.875rem] tracking-tight transition-colors",
-                    active
-                      ? "opacity-100"
-                      : solid
-                        ? "text-muted hover:text-ink"
-                        : "text-white/65 hover:text-white",
-                  )}
-                >
-                  {item.label}
-                  <span
-                    className={cx(
-                      "absolute inset-x-3.5 -bottom-0.5 h-px origin-left bg-ember transition-transform duration-300",
-                      active ? "scale-x-100" : "scale-x-0",
-                    )}
-                    aria-hidden
-                  />
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="ml-auto flex items-center gap-2 lg:ml-0">
+        <div className="border-b border-line bg-paper">
+          <div className="mx-auto flex min-h-[var(--header-h)] w-full max-w-[80rem] items-center gap-4 px-4 py-2 sm:px-6 lg:px-8">
             <Link
-              href="/saved"
-              className={cx(
-                "relative inline-flex size-10 items-center justify-center rounded-full transition-colors",
-                solid ? "text-ink-soft hover:bg-surface-2 hover:text-ink" : "hover:bg-white/15",
-              )}
-              aria-label={`Saved homes${ready && saved.length ? ` (${saved.length})` : ""}`}
+              href="/"
+              className="shrink-0 transition-opacity hover:opacity-80"
+              aria-label={`${site.name} — home`}
             >
-              <Icon.Heart className="size-[1.1rem]" filled={ready && saved.length > 0} />
-              {ready && saved.length > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 grid size-[1.15rem] place-items-center rounded-full bg-ember font-mono text-[0.6rem] font-bold text-on-ember">
-                  {saved.length}
-                </span>
-              )}
+              <Logo className="text-ink" />
             </Link>
 
-            <ThemeToggle
-              className={cx(
-                "inline-flex size-10 items-center justify-center rounded-full transition-colors",
-                solid ? "text-ink-soft hover:bg-surface-2 hover:text-ink" : "hover:bg-white/15",
-              )}
-            />
+            <nav className="ml-auto hidden items-center gap-1 lg:flex" aria-label="Primary">
+              {primaryNav.map((item) => {
+                const active =
+                  pathname === item.href || pathname.startsWith(`${item.href}/`);
+                const Glyph = item.icon ? Icon[item.icon] : undefined;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={cx(
+                      "flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200 xl:px-4",
+                      active
+                        ? "bg-ember-wash text-ember"
+                        : "text-ink hover:bg-surface-2",
+                    )}
+                  >
+                    {Glyph && <Glyph className="size-4 shrink-0" />}
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
 
-            {/* The number, spelled out, next to the button that asks for a
-                form. Somebody who is ready to ring should not have to find the
-                footer to do it, and on a phone the whole thing is the tap
-                target rather than a label beside one. */}
-            <a
-              href={site.phoneHref}
-              className={cx(
-                "inline-flex items-center gap-2 rounded-button px-3 py-2 font-mono text-[0.85rem] transition-colors",
-                solid
-                  ? "text-ink hover:bg-surface-2"
-                  : "text-white hover:bg-white/15",
-              )}
-              aria-label={`Call ${site.name} on ${site.phone}`}
-            >
-              <Icon.Phone className="size-4 shrink-0" />
-              <span className="hidden md:inline">{site.phone}</span>
-            </a>
-
-            <span className="hidden sm:block">
+            <div className="ml-auto flex items-center gap-2 lg:ml-2">
               <Link
-                href="/contact"
-                className={cx(
-                  buttonStyles.primary,
-                  "!py-2.5",
-                  !solid && "!bg-white !text-ink hover:!bg-ember hover:!text-on-ember",
-                )}
+                href="/saved"
+                className={cx(iconButton, "relative")}
+                aria-label={`Saved homes${ready && saved.length ? ` (${saved.length})` : ""}`}
               >
-                Get a free quote
+                <Icon.Heart className="size-[1.1rem]" filled={ready && saved.length > 0} />
+                {ready && saved.length > 0 && (
+                  <span className="absolute -right-0.5 -top-0.5 grid size-[1.15rem] place-items-center rounded-full bg-ember text-[0.6rem] font-bold text-on-ember">
+                    {saved.length}
+                  </span>
+                )}
               </Link>
-            </span>
 
-            <button
-              type="button"
-              onClick={() => setOpen((v) => !v)}
-              className={cx(
-                "inline-flex size-10 items-center justify-center rounded-full transition-colors lg:hidden",
-                solid ? "hover:bg-surface-2" : "hover:bg-white/15",
-              )}
-              aria-expanded={open}
-              aria-controls="mobile-nav"
-              aria-label={open ? "Close menu" : "Open menu"}
-            >
-              {open ? <Icon.Close className="size-5" /> : <Icon.Menu className="size-5" />}
-            </button>
+              <ThemeToggle className={iconButton} />
+
+              {/* Outlined rather than filled: the gradient buttons on the page
+                  are the calls to action, and a third one up here would flatten
+                  the hierarchy the hero depends on. */}
+              <a
+                href={site.phoneHref}
+                className="hidden items-center gap-2 whitespace-nowrap rounded-lg border-2 border-ink px-4 py-2.5 text-sm font-semibold text-ink transition-colors duration-200 hover:bg-ink hover:text-paper sm:inline-flex"
+                aria-label={`Call ${site.name} on ${site.phone}`}
+              >
+                <Icon.Phone className="size-4 shrink-0" />
+                {site.phone}
+              </a>
+
+              <button
+                type="button"
+                onClick={() => setOpen((v) => !v)}
+                className={cx(iconButton, "lg:hidden")}
+                aria-expanded={open}
+                aria-controls="mobile-nav"
+                aria-label={open ? "Close menu" : "Open menu"}
+              >
+                {open ? <Icon.Close className="size-5" /> : <Icon.Menu className="size-5" />}
+              </button>
+            </div>
           </div>
-        </div>
         </div>
       </header>
 
@@ -199,47 +148,36 @@ export function SiteHeader() {
         )}
         aria-hidden={!open}
       >
-        {/* Start-aligned rather than centred: the list is long enough on a
-            small screen to overflow, and a centred flex column puts its top
-            items out of scroll range when it does. */}
         <nav
-          className="flex h-full flex-col overflow-y-auto px-6 pb-10 pt-[calc(var(--chrome-h)+2.5rem)]"
+          className="flex h-full flex-col overflow-y-auto px-5 pb-10 pt-[calc(var(--chrome-h)+1.5rem)]"
           aria-label="Mobile"
         >
-          {drawerNav.map((item, i) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              tabIndex={open ? 0 : -1}
-              className="group flex items-baseline gap-4 border-b border-line py-4"
-              style={{ transitionDelay: `${i * 40}ms` }}
-            >
-              <span className="font-mono text-xs text-ember">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="font-display text-3xl tracking-tight text-ink transition-transform duration-300 group-hover:translate-x-2 sm:text-4xl">
+          {drawerNav.map((item) => {
+            const Glyph = item.icon ? Icon[item.icon] : undefined;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                tabIndex={open ? 0 : -1}
+                className="flex items-center gap-3 border-b border-line py-4 text-lg font-medium text-ink"
+              >
+                {Glyph ? (
+                  <Glyph className="size-5 shrink-0 text-ember" />
+                ) : (
+                  <span className="size-5 shrink-0" />
+                )}
                 {item.label}
-              </span>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
           <a
             href={site.phoneHref}
             tabIndex={open ? 0 : -1}
-            className={cx(
-              buttonStyles.primary,
-              "mt-10 w-full !bg-moss !py-4 text-base !text-white dark:!text-paper",
-            )}
+            className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-[image:var(--gradient)] px-6 py-4 text-base font-semibold text-white shadow-[var(--button-shadow)]"
           >
             <Icon.Phone className="size-5" />
             Call {site.phone}
           </a>
-          <Link
-            href="/contact"
-            tabIndex={open ? 0 : -1}
-            className={cx(buttonStyles.outline, "mt-3 w-full !py-4 text-base")}
-          >
-            Get a free quote
-          </Link>
         </nav>
       </div>
     </>

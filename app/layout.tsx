@@ -29,6 +29,8 @@ const FONT_VARS: Record<FontChoice, string> = {
   "ui-sans": "--font-ui-sans",
   grotesk: "--font-grotesk",
   mono: "--font-mono-face",
+  /* No webfont behind it — `stack()` special-cases this one. */
+  system: "",
 };
 
 const FONT_FALLBACKS: Record<FontChoice, string> = {
@@ -36,10 +38,14 @@ const FONT_FALLBACKS: Record<FontChoice, string> = {
   "ui-sans": "ui-sans-serif, system-ui, sans-serif",
   grotesk: "ui-sans-serif, system-ui, sans-serif",
   mono: "ui-monospace, monospace",
+  system:
+    'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
 };
 
 const stack = (choice: FontChoice) =>
-  `var(${FONT_VARS[choice]}), ${FONT_FALLBACKS[choice]}`;
+  choice === "system"
+    ? FONT_FALLBACKS.system
+    : `var(${FONT_VARS[choice]}), ${FONT_FALLBACKS[choice]}`;
 
 /* The skin's palette, radii and typefaces as one stylesheet, inlined ahead
    of anything else in the head. */

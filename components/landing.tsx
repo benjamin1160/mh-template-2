@@ -21,7 +21,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { AssemblyDiagram, assemblyLegend } from "@/components/assembly-diagram";
 import { Scene } from "@/components/artwork/scene";
-import { CallBanner } from "@/components/call-banner";
 import { ContactBand } from "@/components/contact-band";
 import { CountUp } from "@/components/count-up";
 import { ListingCard } from "@/components/listing-card";
@@ -31,7 +30,6 @@ import { PromotionBanner } from "@/components/promotion-banner";
 import { QuoteForm } from "@/components/quote-form";
 import { Reveal } from "@/components/reveal";
 import { SizeCategories } from "@/components/size-categories";
-import { TrustRow } from "@/components/trust-row";
 import { LocationHours } from "@/components/location-hours";
 import { VideoShowcase } from "@/components/video-showcase";
 import {
@@ -44,8 +42,8 @@ import {
 } from "@/components/ui";
 import { communities } from "@/lib/communities";
 import { company } from "@/lib/company";
-import { featuredListings, listings, seriesLabel } from "@/lib/homes";
-import { money, num, priceText } from "@/lib/format";
+import { featuredListings, listings } from "@/lib/homes";
+import { market } from "@/lib/market";
 import { sections, videoShowcase, type LandingSection } from "@/lib/page-config";
 import { featuredPromotion } from "@/lib/promotions";
 import { site } from "@/lib/site";
@@ -55,13 +53,6 @@ import heroPhoto from "@/public/photos/hero-home.jpg";
    category, not options or tolerances on any particular plan. Anything
    specific to a home — its finish schedule, its energy rating, its warranty —
    belongs on that listing, sourced from the manufacturer's own sheet. */
-const SPECS = [
-  "Built indoors",
-  "HUD-code certified",
-  "Twenty plans on the lot",
-  "Delivered and set",
-];
-
 const TICKER = [
   "Built indoors on a jig",
   "HUD-code certified",
@@ -124,42 +115,31 @@ const MYTHS = [
   },
 ];
 
-const PROCESS = [
+/* Three steps, because a stranger deciding whether to ring reads three and
+   skims five. The long version — plant inspections, transport, the set — is
+   `/why-manufactured`, which is where somebody who wants it goes. */
+const STEPS = [
   {
-    n: "01",
-    title: "Choose the plan",
-    body: "Walk the models, pull the floor plans apart, move a wall if you need to. Nothing is locked until you lock it.",
-    icon: Icon.Plan,
+    title: "Tell us your situation",
+    body: "A few details about what you need, roughly what you can spend, and where you want to live.",
   },
   {
-    n: "02",
-    title: "Site and finance",
-    body: "We check the pad, the utilities, the setbacks and the titling path before you sign anything. This is the step that decides whether your home appreciates.",
-    icon: Icon.Shield,
+    title: "We match home and plan",
+    body: "We put the right plan against the right financing for your situation, and price the site work honestly.",
   },
   {
-    n: "03",
-    title: "Eleven weeks in the plant",
-    body: "Framed on a jig, inspected at nine stations by a third-party agency, blower-door tested, and shrink-wrapped. Rain never touches the lumber.",
-    icon: Icon.Wrench,
+    title: "We handle setup and delivery",
+    body: "Permits, transport, the set, the connections and the skirting. You get keys.",
   },
-  {
-    n: "04",
-    title: "Transport and set",
-    body: "Sections arrive on a Tuesday. By Wednesday afternoon the home is on its piers, strapped, dried in and locked.",
-    icon: Icon.Truck,
-  },
-  {
-    n: "05",
-    title: "Trim, connect, hand over keys",
-    body: [
-      "Marriage-line finish, utility hookups, skirting and the walkthrough",
-      company.warrantyMonths
-        ? `, and a ${company.warrantyMonths}-month structural warranty that we actually answer the phone for.`
-        : ".",
-    ].join(""),
-    icon: Icon.Bolt,
-  },
+];
+
+/* Three things somebody wants to know before they ring, in the order they
+   worry about them. None is a claim about the business — every dealership on
+   this template can stand behind all three. */
+const REASSURANCES = [
+  "Free consultation",
+  "No obligation",
+  "Quick response",
 ];
 
 /* The three ways onto ground, in the order they cost money. The long
@@ -223,229 +203,106 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
   const featured = listingSeries
     ? listings.filter((l) => l.series === listingSeries)
     : featuredListings();
-  const hero = featured[0];
-  /* Both hero figures come off the same filter, so the count under the CTA
-     and the "starting at" price can never disagree with each other — or with
-     what a visitor finds after tapping through to /listings. */
-  const available = listings.filter((l) => l.status === "available");
-  const availablePrices = available.map((l) => l.price).filter((p): p is number => p !== undefined);
-  const startingPrice = availablePrices.length ? Math.min(...availablePrices) : undefined;
-  const sizes = available.map((l) => l.sqft);
   const promotion = featuredPromotion();
   const team = company.team ?? [];
 
   const bands: Band[] = [
     {
       key: "hero",
-      show: sections.hero && !!hero,
-      numbered: true,
-      render: (index) => (
-          <section
-            id="hero"
-            data-hero-scrim
-            className="relative isolate flex flex-col overflow-hidden bg-ink pb-14 dark:bg-surface sm:pb-16 lg:min-h-[94svh] lg:justify-end lg:bg-transparent lg:pb-20 lg:pt-[calc(var(--chrome-h)+5rem)] dark:lg:bg-transparent"
-          >
-            {/* One photograph, two layouts. Up to `lg` it is a landscape band at
-                the top of a dark section — a full-bleed crop of a landscape shot
-                in a portrait viewport shows a wall, not a house. From `lg` the
-                same element becomes the full-bleed background. */}
-            <div className="grain relative aspect-[4/3] max-h-[62svh] w-full overflow-hidden sm:aspect-[16/9] lg:absolute lg:inset-0 lg:-z-10 lg:aspect-auto lg:max-h-none">
-              <Image
-                src={heroPhoto}
-                alt="A manufactured home on the lot — board-and-batten gable, a covered front porch and a full-width entry deck."
-                fill
-                preload
-                quality={90}
-                sizes="100vw"
-                placeholder="blur"
-                className="object-cover object-[56%_50%] sm:object-center lg:object-[center_44%]"
-              />
-              {/* Keeps the transparent header legible against the pale sky */}
-              <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/60 to-transparent sm:h-36" />
-              {/* Blends the band into the dark section beneath it */}
-              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink to-transparent dark:from-surface lg:hidden" />
-              {/* Scrims that only apply once the photo sits behind the copy */}
-              <div className="absolute inset-0 hidden bg-gradient-to-t from-black/88 via-black/45 to-black/20 lg:block" />
-              <div className="absolute inset-0 hidden bg-gradient-to-r from-black/65 via-black/10 to-transparent lg:block" />
-            </div>
+      show: sections.hero,
+      render: () => (
+        <section id="hero" className="relative overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <Image
+              src={heroPhoto}
+              alt="A manufactured home on the lot — board-and-batten gable, a covered front porch and a full-width entry deck."
+              fill
+              preload
+              quality={90}
+              sizes="100vw"
+              placeholder="blur"
+              className="object-cover object-center"
+            />
+            {/* The reference scrim, both stops: dark enough at the top for the
+                badge and the headline, darker still at the foot where the
+                trust row sits on grass. */}
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.7)_100%)]" />
+          </div>
 
-            <Container className="mt-9 sm:mt-10 lg:mt-0">
-              <div className="max-w-4xl">
-                {/* The one line a stranger reads before the headline: who this is
-                    for and where it is. Every word of it comes from `site`, so it
-                    localises itself the moment the address does. */}
-                <p className="inline-flex items-center gap-2.5 rounded-button border border-white/25 bg-white/10 px-4 py-2 text-[0.8rem] text-white backdrop-blur-md">
-                  <Icon.Check className="size-4 shrink-0 text-moss-soft" />
+          <Container className="py-12 pb-24 md:py-20 md:pb-32">
+            <div className="grid items-center gap-8 md:grid-cols-2 md:gap-12">
+              <div className="text-center md:text-left">
+                <p className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm">
+                  <Icon.Star className="size-4 shrink-0 text-accent" />
                   Trusted by families in {site.address.city}, {site.address.region}
                 </p>
 
-                <Eyebrow index={index} className="mt-6 !text-white/70">
-                  {site.name} · {site.address.city}, {site.address.region}
-                </Eyebrow>
-
-                <h1 className="mt-6 font-display text-display text-balance text-white sm:mt-7">
-                  Built indoors.
-                  <br />
-                  Better <em className="italic text-ember-soft">because</em> of it.
+                <h1 className="mb-4 text-4xl font-bold uppercase leading-tight text-white md:text-5xl lg:text-6xl">
+                  The top choice for manufactured homes in{" "}
+                  {market.regionName ?? site.address.region}
                 </h1>
 
-                <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white sm:mt-8 sm:text-xl lg:text-2xl">
-                  Modern manufactured homes, built for the way you actually want to
-                  live.
+                <p className="mx-auto mb-8 max-w-xl text-lg text-white/85 md:mx-0 md:text-xl">
+                  Quality manufactured homes at prices that work. We make
+                  homeownership affordable.
                 </p>
 
-                <p className="mt-4 max-w-2xl text-[1.02rem] leading-relaxed text-white/75 sm:mt-5 sm:text-lg">
-                  Built indoors, inspected in the plant, and set on your land or in a
-                  community. Walk all twenty plans on the lot in {site.address.city},
-                  bring the parcel number if you have one, and ask us what yours would
-                  cost.
-                </p>
-
-                <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap sm:items-center">
-                  {/* Ember rather than ink: below `lg` this sits on the dark
-                      section rather than on the photograph, where an ink pill
-                      would disappear. Hover flips to the ink/paper pair, which
-                      stays legible in both themes. */}
-                  <ButtonLink
+                <div className="mb-8 flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
+                  <Link
                     href="/listings"
-                    className="w-full !bg-ember !px-7 !py-4 !text-base !text-on-ember hover:!bg-ink hover:!text-paper sm:w-auto"
+                    className="group/btn flex items-center justify-center gap-2 rounded-xl bg-[image:var(--gradient)] px-8 py-4 text-lg font-semibold text-white shadow-[var(--button-shadow)] transition-all duration-300 hover:scale-105 hover:bg-[image:var(--gradient-hover)]"
                   >
-                    Explore Available Homes
-                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-                  </ButtonLink>
-                  {/* The second action is the telephone, not a second page.
-                      On a phone this is the fastest route from the hero to a
-                      person, and it is the one a dealership actually wants. */}
+                    Browse homes
+                    <Icon.Arrow className="size-5 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </Link>
                   <a
                     href={site.phoneHref}
-                    className="inline-flex w-full items-center justify-center gap-2.5 rounded-button bg-moss px-7 py-4 text-base font-medium text-white transition-transform hover:scale-[1.02] active:scale-[0.99] dark:text-paper sm:w-auto"
+                    className="flex items-center justify-center gap-2 rounded-xl border-2 border-white bg-white/10 px-8 py-4 text-lg font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-white hover:text-ink"
                     aria-label={`Call ${site.name} on ${site.phone}`}
                   >
-                    <Icon.Phone className="size-4 shrink-0" />
-                    Call {site.phone}
+                    <Icon.Phone className="size-5 shrink-0" />
+                    Call now
                   </a>
-                  <Link
-                    href="/why-manufactured"
-                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/30 px-7 py-4 text-base text-white transition-colors hover:border-white hover:bg-white hover:text-ink sm:w-auto"
-                  >
-                    See how they&apos;re built
-                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
                 </div>
 
-                <p className="mt-4 font-mono text-[0.8rem] text-white/70">
-                  {available.length} homes currently available
-                </p>
-
-                {/* A list rather than one middot-joined string: it wraps by item,
-                    and the separator trails its own item so a wrap never starts a
-                    line with a stray middot. */}
-                <ul className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 sm:mt-8">
-                  {SPECS.map((spec, i) => (
-                    <li key={spec} className="flex items-center gap-3">
-                      <span className="eyebrow !text-white/70">{spec}</span>
-                      {i < SPECS.length - 1 && (
-                        <span className="text-white/30" aria-hidden>
-                          ·
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Price, and immediately beneath it what that price covers */}
-              <div className="mt-10 grid gap-8 sm:mt-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12">
-                {/* Lead with price where there is one, and with the range of
-                    plans where pricing is quoted rather than published. */}
-                {startingPrice !== undefined ? (
-                  <div>
-                    <p className="eyebrow !text-white/55">Starting at</p>
-                    <p className="mt-2 font-display text-3xl tracking-tight text-white sm:text-4xl">
-                      {money(startingPrice)}
-                    </p>
-                    <p className="mt-3 max-w-md text-sm leading-relaxed text-white/70">
-                      Includes transport, the set, marriage-line finish, skirting and
-                      utility connections to the stub. Site work is quoted separately,
-                      because it genuinely varies.
-                    </p>
-                  </div>
-                ) : (
-                  <div>
-                    <p className="eyebrow !text-white/55">Plans on the lot</p>
-                    <p className="mt-2 font-display text-3xl tracking-tight text-white sm:text-4xl">
-                      {num(Math.min(...sizes))}–{num(Math.max(...sizes))} sq ft
-                    </p>
-                    <p className="mt-3 max-w-md text-sm leading-relaxed text-white/70">
-                      One bedroom to four, park model to 2,600 square feet. Pricing
-                      depends on options, delivery distance and site work, so we quote
-                      it — call {site.phone} and we will put real numbers against a plan.
-                    </p>
-                  </div>
+                {/* Licence number first, then whatever the business already
+                    advertises. Everything here is `lib/company.ts`, and a
+                    dealership that publishes none of it gets no row rather
+                    than a row of generic promises. */}
+                {(company.licenseId || (company.badges ?? []).length > 0) && (
+                  <ul className="flex flex-wrap justify-center gap-4 md:justify-start">
+                    {company.licenseId && (
+                      <li className="flex items-center gap-2 text-sm text-white/85">
+                        <Icon.Check className="size-4 shrink-0 text-moss-soft" />
+                        Licensed dealer #{company.licenseId}
+                      </li>
+                    )}
+                    {(company.badges ?? []).map((badge) => (
+                      <li key={badge} className="flex items-center gap-2 text-sm text-white/85">
+                        <Icon.Check className="size-4 shrink-0 text-moss-soft" />
+                        {badge}
+                      </li>
+                    ))}
+                  </ul>
                 )}
-
-                <Link
-                  href={`/listings/${hero.slug}`}
-                  className="group flex w-full items-center gap-4 rounded-2xl border border-white/20 bg-white/[0.06] p-3 backdrop-blur-md transition-colors hover:border-white/50 hover:bg-white/[0.12] sm:w-auto sm:justify-self-start sm:pr-6 lg:bg-black/30 lg:justify-self-end lg:hover:bg-black/45"
-                >
-                  <div className="size-14 shrink-0 overflow-hidden rounded-xl sm:size-16">
-                    <Scene
-                      kind="exterior"
-                      photoKey={`${hero.slug}/exterior`}
-                      sizes="64px"
-                      label=""
-                      className="size-full object-cover"
-                    />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-white/55">
-                      Featured plan
-                    </p>
-                    <p className="mt-1 truncate font-display text-lg text-white sm:text-xl">
-                      {hero.name}
-                    </p>
-                    <p className="truncate font-mono text-[0.7rem] text-white/60 sm:text-xs">
-                      {hero.beds} bd · {num(hero.sqft)} sq ft · {priceText(hero.price)}
-                    </p>
-                  </div>
-                  <Icon.Arrow className="ml-auto size-5 shrink-0 text-white/60 transition-transform duration-300 group-hover:translate-x-1 sm:ml-0" />
-                </Link>
               </div>
-            </Container>
-          </section>
-      ),
-    },
-    {
-      key: "trustRow",
-      show: sections.trustRow,
-      render: () => <TrustRow />,
-    },
-    {
-      key: "quoteForm",
-      show: sections.quoteForm,
-      numbered: true,
-      render: (index) => (
-        <Section id="quote">
-          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-            <Reveal>
-              <SectionHeading
-                index={index}
-                eyebrow="Before you fall for a floor plan"
-                title={
-                  <>
-                    Ask the awkward
-                    <br />
-                    question first.
-                  </>
-                }
-                lede="What it costs to actually stand a home on the ground you have — not the sticker on the side of it."
-              />
-            </Reveal>
-            <Reveal delay={120}>
+
               <QuoteForm />
-            </Reveal>
+            </div>
+          </Container>
+
+          {/* The band that hands the hero over to the page. It is filled with
+              `--paper`, so it reads as the white below rising into the
+              photograph rather than as a shape drawn on top of it. */}
+          <div className="absolute inset-x-0 bottom-0" aria-hidden>
+            <svg viewBox="0 0 1440 120" fill="none" className="h-auto w-full">
+              <path
+                d="M0 120L48 110C96 100 192 80 288 70C384 60 480 60 576 65C672 70 768 80 864 85C960 90 1056 90 1152 85C1248 80 1344 70 1392 65L1440 60V120H0Z"
+                className="fill-paper"
+              />
+            </svg>
           </div>
-        </Section>
+        </section>
       ),
     },
     {
@@ -454,148 +311,245 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
       render: () => <PromotionBanner promotion={promotion!} />,
     },
     {
+      key: "valueProp",
+      show: sections.valueProp,
+      render: () => (
+        <section id="value" className="relative w-full overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <Scene
+              kind="exterior"
+              photoKey="page/home-closing"
+              label={`A ${site.short} home`}
+              className="size-full object-cover"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.15)_0%,rgba(0,0,0,0.55)_100%)]" />
+          </div>
+
+          {/* Bottom-aligned rather than centred: the copy belongs on the
+              ground in the photograph, not across the middle of the house. */}
+          <div className="relative z-10 flex min-h-[480px] flex-col items-center justify-end px-4 pb-16 pt-12 text-center sm:px-6 lg:px-8">
+            <h2 className="mb-4 max-w-3xl text-3xl font-bold text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.4)] md:text-4xl lg:text-5xl">
+              Imagine pulling into a home like this every day
+            </h2>
+            <p className="max-w-2xl text-lg text-white/85 [text-shadow:0_1px_4px_rgba(0,0,0,0.3)] md:text-xl">
+              We help families in {site.address.city}, {site.address.region} get
+              beautiful manufactured homes on land, with financing, delivery and
+              setup handled for you.
+            </p>
+          </div>
+        </section>
+      ),
+    },
+    {
       key: "socialProof",
       show: sections.socialProof,
-      numbered: true,
-      render: (index) => (
-          <section id="social-proof" className="border-y border-line bg-surface">
-            <Container className="py-20 sm:py-28">
-              <Reveal>
-                <SectionHeading
-                  index={index}
-                  eyebrow="From the driveway"
-                  title="What our customers say"
-                  /* The link, where the business publishes one. It is the whole
-                     point of the band: three quotes we chose ourselves prove
-                     nothing, and a source we do not control proves rather a
-                     lot. No `reviewsUrl` in `lib/company.ts`, no link. */
-                  action={
-                    company.reviewsUrl ? (
-                      <a
-                        href={company.reviewsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group inline-flex items-center gap-2 text-[0.95rem] font-medium text-ink underline-offset-4 hover:underline"
-                      >
-                        All reviews on {company.reviewsLabel ?? "the web"}
-                        <Icon.Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
-                      </a>
-                    ) : undefined
-                  }
-                />
-              </Reveal>
-              <div className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-line sm:grid-cols-3">
-                {TESTIMONIALS.map((t, i) => (
-                  <Reveal key={i} delay={i * 100} as="figure" className="flex flex-col gap-6 bg-paper p-8">
-                    <Icon.Quote className="size-7 text-ember opacity-60" />
-                    <blockquote className="flex-1 font-display text-lg leading-relaxed tracking-tight text-ink">
-                      {t.quote}
-                    </blockquote>
-                    <figcaption className="border-t border-line pt-5">
-                      <p className="text-sm font-medium text-ink">{t.name}</p>
-                      <p className="mt-1 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
-                        {t.detail}
-                      </p>
-                    </figcaption>
-                  </Reveal>
-                ))}
+      render: () => (
+        <section id="social-proof" className="relative overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <Scene
+              kind="living"
+              photoKey="page/reviews"
+              label=""
+              className="size-full object-cover"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.5)_0%,rgba(0,0,0,0.65)_100%)]" />
+          </div>
+
+          <Container className="relative z-10 py-16 md:py-24">
+            <div className="mb-12 text-center">
+              <p className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-white/70">
+                <Icon.Star className="size-4 text-accent" />
+                Reviews
+              </p>
+              <h2 className="text-2xl font-bold text-white md:text-4xl">
+                What our customers say
+              </h2>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {TESTIMONIALS.map((t, i) => (
+                <Reveal
+                  key={i}
+                  delay={i * 100}
+                  as="figure"
+                  className="flex flex-col gap-5 rounded-2xl border border-white/15 bg-white/10 p-6 backdrop-blur-sm"
+                >
+                  <Icon.Quote className="size-6 text-accent" />
+                  <blockquote className="flex-1 leading-relaxed text-white/90">
+                    {t.quote}
+                  </blockquote>
+                  <figcaption className="border-t border-white/15 pt-4">
+                    <p className="text-sm font-semibold text-white">{t.name}</p>
+                    <p className="mt-0.5 text-xs text-white/60">{t.detail}</p>
+                  </figcaption>
+                </Reveal>
+              ))}
+            </div>
+
+            {/* The link is the point of the band: three quotes we chose
+                ourselves prove nothing, and a source we do not control proves
+                rather a lot. No `reviewsUrl` in `lib/company.ts`, no link. */}
+            {company.reviewsUrl && (
+              <div className="mt-10 text-center">
+                <a
+                  href={company.reviewsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-white transition-opacity hover:opacity-80"
+                >
+                  View all reviews on {company.reviewsLabel ?? "the web"}
+                  <Icon.External className="size-4" />
+                </a>
               </div>
-            </Container>
-          </section>
+            )}
+          </Container>
+        </section>
       ),
     },
     {
       key: "howItWorks",
       show: sections.howItWorks,
-      numbered: true,
-      render: (index) => (
-          <section id="how-it-works" className="border-y border-line bg-ink text-paper dark:bg-surface dark:text-ink">
-            <Container className="py-20 sm:py-28 lg:py-32">
-              <Reveal>
-                <Eyebrow index={index} className="!text-current opacity-60">
-                  Plan to keys
-                </Eyebrow>
-                <h2 className="mt-5 max-w-2xl font-display text-headline text-balance">
-                  Five steps, eleven weeks,
-                  <br />
-                  one very good Wednesday.
-                </h2>
-              </Reveal>
+      render: () => (
+        <section id="how-it-works" className="relative w-full bg-paper">
+          <Container className="py-12 md:py-16">
+            <div className="mb-10 text-center">
+              <h2 className="mb-3 text-3xl font-bold text-ink md:text-4xl">How it works</h2>
+              <p className="mx-auto max-w-2xl text-lg text-muted">
+                Three simple steps to get into your new home.
+              </p>
+            </div>
 
-              <ol className="mt-16 grid gap-px overflow-hidden rounded-2xl bg-current/15 sm:grid-cols-2 lg:grid-cols-5">
-                {PROCESS.map((step, i) => (
-                  <Reveal
-                    key={step.n}
-                    delay={i * 80}
-                    as="li"
-                    className="group relative flex flex-col gap-5 bg-ink p-7 transition-colors duration-500 hover:bg-ember dark:bg-surface"
-                  >
-                    <div className="flex items-center justify-between">
-                      <step.icon className="size-7 opacity-70 transition-opacity group-hover:opacity-100" />
-                      <span className="font-mono text-xs opacity-45">{step.n}</span>
-                    </div>
-                    <h3 className="font-display text-xl leading-snug tracking-tight">{step.title}</h3>
-                    <p className="text-sm leading-relaxed opacity-65 transition-opacity group-hover:opacity-90">
-                      {step.body}
-                    </p>
-                  </Reveal>
-                ))}
-              </ol>
-            </Container>
-          </section>
+            <ol className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
+              {STEPS.map((step, i) => (
+                <Reveal
+                  key={step.title}
+                  delay={i * 90}
+                  as="li"
+                  className="relative flex flex-col items-center rounded-2xl p-6 text-center md:p-8"
+                >
+                  <span className="mb-4 flex size-14 items-center justify-center rounded-full bg-[image:var(--gradient)] text-lg font-bold text-white shadow-[var(--button-shadow)]">
+                    {i + 1}
+                  </span>
+                  <h3 className="mb-2 text-xl font-semibold text-ink">{step.title}</h3>
+                  <p className="text-sm leading-relaxed text-muted">{step.body}</p>
+                </Reveal>
+              ))}
+            </ol>
+          </Container>
+        </section>
       ),
     },
     {
       key: "listings",
       show: sections.listings && featured.length > 0,
-      numbered: true,
-      render: (index) => (
-          <Section id="listings" className="!pt-4">
-            <Reveal>
-              <SectionHeading
-                index={index}
-                eyebrow={listingSeries ? `${seriesLabel(listingSeries)} · on the lot now` : "On the lot now"}
-                title={
-                  listingsHeadline ?? (
-                    <>
-                      Twenty plans.
-                      <br />
-                      Not one of them apologises.
-                    </>
-                  )
-                }
-                lede={
-                  listingsLede ??
-                  `Every plan below is Clayton-built and standing on the lot in ${site.address.city}. Walk through any of them in person, in one afternoon.`
-                }
-                action={
-                  <ButtonLink href="/listings" variant="outline">
-                    See all homes
-                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-                  </ButtonLink>
-                }
-              />
-            </Reveal>
+      render: () => (
+        <section id="listings" className="relative overflow-hidden bg-surface">
+          <Container className="py-8 md:py-12">
+            <div className="mb-8 text-center">
+              <h2 className="mb-3 text-3xl font-bold text-ink md:text-4xl">
+                {listingsHeadline ?? "Browse our homes"}
+              </h2>
+              <p className="mx-auto max-w-2xl text-lg text-muted">
+                {listingsLede ??
+                  `Find the right home for your family. Filter by size and features — every one of them is standing on the lot in ${site.address.city}.`}
+              </p>
+            </div>
 
             {/* The four buckets first — most people arrive knowing roughly how
-                wide the ground will take, and nothing else narrows twenty
-                plans as fast. Hidden on a custom page, which is already
+                wide the ground will take, and nothing else narrows the
+                catalogue as fast. Hidden on a custom page, which is already
                 narrowed to one series. */}
             {!listingSeries && (
-              <Reveal delay={80}>
-                <SizeCategories className="mt-12" />
-              </Reveal>
+              <div className="mb-8">
+                <SizeCategories />
+              </div>
             )}
 
-            <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mb-6 flex items-center justify-between gap-4">
+              {/* Counts the cards actually below it, not the filter behind
+                  them — a band that says seven and shows four is the kind of
+                  small lie a visitor notices and generalises from. */}
+              <p className="text-sm text-muted">
+                <span className="font-semibold text-ink">
+                  {Math.min(featured.length, 4)}
+                </span>{" "}
+                of {listings.length} homes
+              </p>
+              <ButtonLink href="/listings" variant="outline" className="!py-2.5 !text-sm">
+                See all {listings.length}
+                <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+              </ButtonLink>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
               {featured.slice(0, 4).map((listing, i) => (
                 <Reveal key={listing.slug} delay={i * 90}>
                   <ListingCard listing={listing} priority={i === 0} className="h-full" />
                 </Reveal>
               ))}
             </div>
-          </Section>
+          </Container>
+        </section>
       ),
+    },
+    {
+      key: "contact",
+      show: sections.contact,
+      render: () => (
+        <section id="contact" className="relative overflow-hidden bg-paper">
+          <Container className="py-16 md:py-24">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+              <div>
+                <h2 className="text-3xl font-bold text-ink md:text-4xl">
+                  Ready to find your{" "}
+                  <span className="bg-[image:var(--gradient)] bg-clip-text text-transparent">
+                    home?
+                  </span>
+                </h2>
+                <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">
+                  Our team is here for every step. Finding the plan, the ground it
+                  goes on, the financing, the delivery and the set — we handle the
+                  parts nobody warns you about.
+                </p>
+
+                <a
+                  href={site.phoneHref}
+                  className="mt-8 flex items-center gap-4 text-ink transition-opacity hover:opacity-80"
+                >
+                  <span className="grid size-12 shrink-0 place-items-center rounded-full bg-ember-wash text-ember">
+                    <Icon.Phone className="size-5" />
+                  </span>
+                  <span>
+                    <span className="block text-sm text-muted">Call us directly</span>
+                    <span className="block text-xl font-bold">{site.phone}</span>
+                  </span>
+                </a>
+
+                <ul className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
+                  {REASSURANCES.map((line) => (
+                    <li key={line} className="flex items-center gap-2 text-sm text-ink-soft">
+                      <Icon.Check className="size-4 shrink-0 text-moss" />
+                      {line}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <Reveal
+                delay={120}
+                className="rounded-2xl border border-line bg-surface p-6 shadow-[var(--card-shadow)] md:p-8"
+              >
+                <ContactBand />
+              </Reveal>
+            </div>
+          </Container>
+        </section>
+      ),
+    },
+    {
+      key: "locationHours",
+      show: sections.locationHours,
+      render: () => <LocationHours />,
     },
     {
       key: "homeOnLand",
@@ -667,6 +621,65 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
       key: "videoShowcase",
       show: sections.videoShowcase && !!videoShowcase,
       render: () => <VideoShowcase video={videoShowcase!} />,
+    },
+    {
+      key: "communities",
+      show: sections.communities && communities.length > 0,
+      numbered: true,
+      render: (index) => (
+          <Section id="communities">
+            <Reveal>
+              <SectionHeading
+                index={index}
+                eyebrow="Where they go"
+                title="Five communities within half an hour of the lot."
+                lede="Real, independently operated communities in Knox and Blount counties. All five are land-lease, which keeps the entry cost down and makes the titling conversation the one worth having early."
+                action={
+                  <ButtonLink href="/communities" variant="outline">
+                    All communities
+                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </ButtonLink>
+                }
+              />
+            </Reveal>
+
+            <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {communities.slice(0, 3).map((c, i) => (
+                <Reveal key={c.slug} delay={i * 90}>
+                  <Link
+                    href={`/communities#${c.slug}`}
+                    className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface transition-all duration-500 hover:-translate-y-1 hover:border-line-strong"
+                  >
+                    <div className="grain relative aspect-[16/10] overflow-hidden">
+                      <Scene
+                        kind="exterior"
+                        photoKey={`community/${c.slug}`}
+                        sizes="(min-width: 1024px) 33vw, 100vw"
+                        label={`${c.name} in ${c.city}, ${c.state}`}
+                        className="size-full object-cover transition-transform duration-[900ms] group-hover:scale-105"
+                      />
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5">
+                        <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-white/70">
+                          {c.tenure}
+                        </p>
+                        <h3 className="mt-1 font-display text-2xl text-white">{c.name}</h3>
+                      </div>
+                    </div>
+                    <div className="flex flex-1 flex-col p-6">
+                      <p className="text-[0.95rem] leading-relaxed text-muted">{c.blurb}</p>
+                      <div className="mt-auto flex items-center justify-between gap-4 pt-6 font-mono text-xs text-muted">
+                        <span>
+                          {c.city}, {c.state}
+                        </span>
+                        <span className="text-ink">{c.operator ?? c.tenure}</span>
+                      </div>
+                    </div>
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+          </Section>
+      ),
     },
     {
       key: "ticker",
@@ -824,178 +837,6 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
               </Reveal>
             </div>
           </Section>
-      ),
-    },
-    {
-      key: "communities",
-      show: sections.communities && communities.length > 0,
-      numbered: true,
-      render: (index) => (
-          <Section id="communities">
-            <Reveal>
-              <SectionHeading
-                index={index}
-                eyebrow="Where they go"
-                title="Five communities within half an hour of the lot."
-                lede="Real, independently operated communities in Knox and Blount counties. All five are land-lease, which keeps the entry cost down and makes the titling conversation the one worth having early."
-                action={
-                  <ButtonLink href="/communities" variant="outline">
-                    All communities
-                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-                  </ButtonLink>
-                }
-              />
-            </Reveal>
-
-            <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {communities.slice(0, 3).map((c, i) => (
-                <Reveal key={c.slug} delay={i * 90}>
-                  <Link
-                    href={`/communities#${c.slug}`}
-                    className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface transition-all duration-500 hover:-translate-y-1 hover:border-line-strong"
-                  >
-                    <div className="grain relative aspect-[16/10] overflow-hidden">
-                      <Scene
-                        kind="exterior"
-                        photoKey={`community/${c.slug}`}
-                        sizes="(min-width: 1024px) 33vw, 100vw"
-                        label={`${c.name} in ${c.city}, ${c.state}`}
-                        className="size-full object-cover transition-transform duration-[900ms] group-hover:scale-105"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-5">
-                        <p className="font-mono text-[0.65rem] uppercase tracking-[0.2em] text-white/70">
-                          {c.tenure}
-                        </p>
-                        <h3 className="mt-1 font-display text-2xl text-white">{c.name}</h3>
-                      </div>
-                    </div>
-                    <div className="flex flex-1 flex-col p-6">
-                      <p className="text-[0.95rem] leading-relaxed text-muted">{c.blurb}</p>
-                      <div className="mt-auto flex items-center justify-between gap-4 pt-6 font-mono text-xs text-muted">
-                        <span>
-                          {c.city}, {c.state}
-                        </span>
-                        <span className="text-ink">{c.operator ?? c.tenure}</span>
-                      </div>
-                    </div>
-                  </Link>
-                </Reveal>
-              ))}
-            </div>
-          </Section>
-      ),
-    },
-    {
-      key: "callBanner",
-      show: sections.callBanner,
-      numbered: true,
-      render: (index) => <CallBanner index={index} />,
-    },
-    {
-      key: "contactForm",
-      show: sections.contactForm,
-      numbered: true,
-      render: (index) => (
-        <Section id="enquire" className="border-t border-line bg-surface">
-          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
-            <Reveal>
-              <SectionHeading
-                index={index}
-                eyebrow="Or write instead"
-                title="Tell us what you're after."
-                lede="Everything we need to give you a real answer rather than a brochure: roughly what you can spend, roughly where you want to be, and how to reach you."
-              />
-              <ul className="mt-10 space-y-4">
-                {[
-                  "We answer within one working day.",
-                  "No credit check to get a figure.",
-                  "We will tell you if we are the wrong dealer for you.",
-                ].map((line) => (
-                  <li key={line} className="flex items-start gap-3 text-[0.95rem] text-ink-soft">
-                    <Icon.Check className="mt-0.5 size-4 shrink-0 text-moss" />
-                    {line}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-10 text-[0.95rem] leading-relaxed text-muted">
-                In a hurry, ring{" "}
-                <a
-                  href={site.phoneHref}
-                  className="font-mono text-ink underline underline-offset-4"
-                >
-                  {site.phone}
-                </a>{" "}
-                instead — {site.hours}.
-              </p>
-            </Reveal>
-            <Reveal delay={120}>
-              <ContactBand />
-            </Reveal>
-          </div>
-        </Section>
-      ),
-    },
-    {
-      key: "locationHours",
-      show: sections.locationHours,
-      numbered: true,
-      render: (index) => <LocationHours index={index} />,
-    },
-    {
-      key: "contact",
-      show: sections.contact,
-      numbered: true,
-      render: (index) => (
-          <section id="contact" className="relative isolate overflow-hidden">
-            <div className="grain absolute inset-0 -z-10">
-              <Scene
-                kind="exterior"
-                photoKey="page/home-closing"
-                label={`A ${site.short} home`}
-                className="size-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/65 to-black/55" />
-              {/* Keeps the copy legible against a bright daytime photograph */}
-              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/25 to-transparent" />
-            </div>
-
-            <Container className="py-28 sm:py-36 lg:py-44">
-              <div className="max-w-3xl">
-                <Eyebrow index={index} className="!text-white/60">
-                  Come and look
-                </Eyebrow>
-                <h2 className="mt-6 font-display text-headline text-balance text-white">
-                  Photos only get
-                  <br />
-                  you so far.
-                </h2>
-                <p className="mt-7 max-w-xl text-lg leading-relaxed text-white/75">
-                  Every plan on this site is standing on the lot in {site.address.city}.
-                  Walk through as many as you like, get underneath one, and ask us
-                  anything — including what it would cost you.
-                </p>
-                <div className="mt-10 flex flex-wrap gap-3">
-                  {/* Ember rather than ink: the default primary is near-black in
-                      the light theme, which disappears into this photograph's
-                      scrim. Ember reads the same in both themes. */}
-                  <ButtonLink
-                    href="/contact"
-                    className="!bg-ember !px-7 !py-4 !text-base !text-on-ember hover:!bg-white hover:!text-ink"
-                  >
-                    Book a walkthrough
-                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-                  </ButtonLink>
-                  <Link
-                    href="/listings"
-                    className="group inline-flex items-center gap-2 rounded-full border border-white/30 px-7 py-4 text-base text-white transition-colors hover:border-white hover:bg-white hover:text-ink"
-                  >
-                    See every plan
-                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </div>
-            </Container>
-          </section>
       ),
     },
 

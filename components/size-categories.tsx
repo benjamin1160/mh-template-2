@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { cx, Icon } from "./ui";
+import { cx } from "./ui";
 import {
   sizeCategoryFacets,
   type Listing,
@@ -37,15 +37,15 @@ export function SizeCategories({
   if (facets.length < 2) return null;
 
   const shell =
-    "group/size flex flex-col gap-1 rounded-card border px-5 py-4 text-left transition-all duration-300";
-  const on = "border-ink bg-ink text-paper";
-  const off = "border-line-strong bg-surface text-ink hover:border-ink hover:-translate-y-0.5";
+    "relative flex flex-col items-center justify-center rounded-xl border p-4 text-center transition-all duration-300 hover:scale-[1.02] md:p-5";
+  const on = "border-ember bg-ember-wash";
+  const off = "border-line bg-paper hover:border-ember";
 
   return (
     <div
       className={cx(
-        "grid gap-3 sm:grid-cols-2",
-        facets.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3",
+        "grid grid-cols-2 gap-3 md:gap-4",
+        facets.length >= 4 ? "md:grid-cols-4" : "md:grid-cols-3",
         className,
       )}
     >
@@ -53,21 +53,18 @@ export function SizeCategories({
         const selected = active === facet.id;
         const body = (
           <>
-            <span className="flex items-center justify-between gap-3">
-              <span className="font-display text-lg tracking-tight">{facet.label}</span>
-              <Icon.Arrow
-                className={cx(
-                  "size-4 shrink-0 transition-transform duration-300 group-hover/size:translate-x-1",
-                  selected ? "text-paper" : "text-muted",
-                )}
-              />
+            <span className="mb-2 text-2xl leading-none" aria-hidden>
+              {facet.glyph}
             </span>
             <span
               className={cx(
-                "font-mono text-[0.7rem] uppercase tracking-[0.14em]",
-                selected ? "text-paper/70" : "text-muted",
+                "text-sm font-semibold md:text-base",
+                selected ? "text-ember" : "text-ink",
               )}
             >
+              {facet.label}
+            </span>
+            <span className="mt-0.5 text-xs text-muted">
               {facet.range} · {facet.count} home{facet.count === 1 ? "" : "s"}
             </span>
           </>

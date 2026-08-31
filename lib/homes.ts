@@ -743,6 +743,17 @@ export const sizeCategoryLabels: Record<SizeCategory, string> = {
   triple: "Triple wide",
 };
 
+/* The glyph on each bucket's button. Emoji rather than drawn icons on
+   purpose: there is no icon set with four house silhouettes that read as
+   "wider than the last one" at 32 pixels, and these do. Swap them for an
+   `Icon` if a deployment would rather not use emoji. */
+export const sizeCategoryGlyphs: Record<SizeCategory, string> = {
+  tiny: "🏠",
+  single: "🏡",
+  double: "🏘️",
+  triple: "🏰",
+};
+
 export const sizeCategoryOrder: SizeCategory[] = ["tiny", "single", "double", "triple"];
 
 export type SizeCategoryFacet = {
@@ -752,6 +763,8 @@ export type SizeCategoryFacet = {
   count: number;
   /** The real footprint range of the homes in it, e.g. "812–1,144 sq ft". */
   range?: string;
+  /** The glyph on the button. */
+  glyph: string;
 };
 
 /** The four buckets, measured against whatever catalogue is passed in. */
@@ -764,6 +777,7 @@ export function sizeCategoryFacets(from: Listing[] = listings): SizeCategoryFace
     return {
       id,
       label: sizeCategoryLabels[id],
+      glyph: sizeCategoryGlyphs[id],
       count: inBucket.length,
       range: inBucket.length
         ? low === high

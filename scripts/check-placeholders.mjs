@@ -38,6 +38,9 @@ const PLACEHOLDERS = {
     ["555-01", "a reserved fictional phone exchange"],
     ["4820 Foothills Works Road", "the fictional lot address"],
   ],
+  "lib/market.ts": [
+    ['regionName: "East Tennessee"', "the template's own market name"],
+  ],
   "lib/company.ts": [
     ["TN-MHD-0000000", "an invented dealer licence number"],
     ["Ruth Okonjo-Vance", "an invented member of staff"],

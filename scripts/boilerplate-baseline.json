@@ -1,6 +1,6 @@
 {
   "components/landing.tsx": {
-    "words": 994,
+    "words": 938,
     "hashes": [
       "c2c0849172c9e775",
       "1bae17df57326c52",
@@ -12,11 +12,9 @@
       "831ea4c9ec6325b3",
       "2d878ff9cbd60cc9",
       "bd8e984ca5353349",
-      "00d743162f9eb9dc",
-      "7a6665a8fcff716b",
-      "31b3c0266c1f16bd",
-      "d1c8013b9ecab8e5",
-      "40a918bdd9b8d8d7",
+      "4b972c1938d67d3b",
+      "73a97b147a23a30a",
+      "c2241971961135ea",
       "711b557702608753",
       "3ba4ab764037ebeb",
       "045da6c72ac3d4b2",
@@ -24,16 +22,16 @@
       "16edfb809fdc8dbc",
       "a31db1863e900b3a",
       "60e427dbc4496646",
-      "5715fd6fb4bb8033",
-      "3ffd62efbdb6bd48",
+      "cf7a7fe3b2b0ec18",
       "932065af064fb67e",
       "76bfd5c3cf76357a",
-      "37e1e7a03bd891e0",
-      "89cabc37a3816991",
+      "3ffd62efbdb6bd48",
       "5646f8caacce7415",
       "f0700bb1c5f379f9",
-      "ed12b500991a6d09",
-      "32a56bdaa49b9e40",
+      "2619c85837817b4f",
+      "abbc6d690831eef6",
+      "ad9e20b13e7d7682",
+      "1b8667eacc3fe663",
       "8532f19f5fb60605",
       "43839c0c028cf5ba",
       "14adc5d14d8ac72c",
@@ -192,32 +190,22 @@
     ]
   },
   "components/quote-form.tsx": {
-    "words": 27,
-    "hashes": [
-      "0c9d467b6ad9cc54"
-    ]
+    "words": 0,
+    "hashes": []
   },
   "components/contact-band.tsx": {
-    "words": 57,
+    "words": 31,
     "hashes": [
-      "5b8958071fcd1c60",
-      "96a7735998e79a88",
-      "75f40939ac901839"
-    ]
-  },
-  "components/call-banner.tsx": {
-    "words": 36,
-    "hashes": [
-      "15965b8d02f69877"
+      "ffee6376cb53a119",
+      "dfc1b5bcb669ab62"
     ]
   },
   "components/location-hours.tsx": {
-    "words": 91,
+    "words": 87,
     "hashes": [
-      "c9c86b373cf55199",
-      "eb5dfbd73c2f2aa9",
+      "79f359623250cfb4",
       "3fdab80411b8edfc",
-      "d0835d6c3b8a29f0"
+      "32ce7ca1f74cc0ce"
     ]
   },
   "lib/faq.ts": {
