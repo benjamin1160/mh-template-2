@@ -4,7 +4,6 @@ import { ButtonLink, Container, Eyebrow, Icon } from "@/components/ui";
 export default function NotFound() {
   return (
     <section
-      data-hero-scrim
       className="relative isolate flex min-h-[86svh] items-end overflow-hidden pb-20 pt-40"
     >
       <div className="grain absolute inset-0 -z-10">

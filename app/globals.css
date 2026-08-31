@@ -23,6 +23,10 @@
   --btn-fg: var(--paper);
   --btn-hover-bg: var(--ember);
   --btn-hover-fg: var(--on-ember);
+  /* Layered over `--btn-bg`, so a skin with no gradient keeps its flat fill
+     and a skin with one gets it without every button changing shape. */
+  --btn-gradient: none;
+  --btn-gradient-hover: none;
 
   /* Corner radii. A skin sets these; components read them through the
      `rounded-button` / `rounded-card` Tailwind utilities below. */
@@ -57,6 +61,9 @@
 
   --ember: #b8461c;
   --ember-soft: #e07a45;
+  --ember-wash: #f8ece5;
+  --accent: #b58436;
+  --accent-soft: #d0a45c;
   --moss: #2f4a3c;
   --moss-soft: #5d8a71;
   --sky: #2b5f7e;
@@ -64,6 +71,14 @@
 
   --on-ember: #fffaf6;
   --shadow-color: 28 22 16;
+
+  /* The brand gradient and the shadows the things wearing it cast. A skin
+     that names none of these gets a flat `ember` primary, which is what
+     Hearthline wants — so the fallbacks below are the flat colour twice. */
+  --gradient: linear-gradient(135deg, var(--ember) 0%, var(--ember) 100%);
+  --gradient-hover: linear-gradient(135deg, var(--ember-soft) 0%, var(--ember-soft) 100%);
+  --button-shadow: 0 10px 25px -5px rgb(var(--shadow-color) / 0.35);
+  --card-shadow: 0 4px 6px -1px rgb(var(--shadow-color) / 0.1);
 
   /* The land-deals map. Counties are shaded by starting payment on a five-step
      moss ramp, weighted toward the cheapest band — the counties a shopper can
@@ -96,6 +111,9 @@
 
   --ember: #e9853f;
   --ember-soft: #f2a66e;
+  --ember-wash: #2a1d13;
+  --accent: #d8ac5f;
+  --accent-soft: #e6c68d;
   --moss: #86b598;
   --moss-soft: #5d8a71;
   --sky: #7fb4d1;
@@ -134,6 +152,9 @@
   --color-line-strong: var(--line-strong);
   --color-ember: var(--ember);
   --color-ember-soft: var(--ember-soft);
+  --color-ember-wash: var(--ember-wash);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
   --color-moss: var(--moss);
   --color-moss-soft: var(--moss-soft);
   --color-sky: var(--sky);

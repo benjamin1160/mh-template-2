@@ -113,7 +113,7 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <Container className="pb-16 pt-[calc(var(--chrome-h)+3rem)] sm:pt-[calc(var(--chrome-h)+4rem)]">
+      <Container className="pb-16 pt-10 sm:pt-12">
         {/* ---------------- Header ---------------- */}
         <nav aria-label="Breadcrumb" className="mb-8">
           <ol className="flex flex-wrap items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">

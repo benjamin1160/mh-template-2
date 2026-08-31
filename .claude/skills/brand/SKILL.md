@@ -70,7 +70,19 @@ ship:
 | Skin | What it is |
 | --- | --- |
 | `hearthline` | Warm and editorial. Serif display face on limestone paper, ember accent, pill buttons. |
-| `nerto` ("Direct") | White ground, slate text, blue primary that turns green on hover, grotesk throughout, squared corners. The look a Mobile Home Manager deployment wears. |
+| `nerto` ("Direct") | White ground, slate type, a blue-to-orange gradient on every primary button, system sans, 12px buttons and 16px cards. The look a Mobile Home Manager deployment wears — the values are that engine's `custom` skin as it resolves them, not an approximation. |
+
+Two parts of a skin are optional blocks rather than palette entries, because
+a flat primary and a gradient primary are different design languages rather
+than different values of one:
+
+- `gradient` / `gradientDark` name `--gradient`, `--gradient-hover`,
+  `--button-shadow` and `--card-shadow`, and also set `--btn-gradient`, which
+  `buttonStyles.primary` layers **over** `--btn-bg`. A skin that names no
+  gradient resolves it to `none` and keeps exactly the flat button it had.
+- `fonts` may name `system`, which downloads nothing and renders in the
+  reader's own interface face. That is what `nerto` uses. Every other choice
+  is self-hosted by `next/font` in `app/layout.tsx`.
 
 `activeSkin` at the foot of that file picks one, and that single line
 restyles the entire site. So there are two ways to recolour, and which one
@@ -134,14 +146,17 @@ out of `components/landing.tsx`, because the next deployment wants it back.
   the footer and the sitemap in the same move.
 - `/privacy-policy` and `/terms` have no switch, on purpose.
 
-The default arrangement is the short, conversion-shaped one: hero, trust row,
-quote form, reviews, how it works, the catalogue, the ways onto land, then the
-call banner, the enquiry form, the hours and the closing scene. The four
-bands that make up the long editorial read — `ticker`, `numbers`, `myth` and
-`cutaway` — ship `false`. Their copy and their artwork are all still in
-`components/landing.tsx`; a dealership that wants the twenty-minute argument
-for a manufactured home turns them back on and gets it, and the numbered
-eyebrows renumber themselves around whatever survives.
+The default arrangement is the short, conversion-shaped one, and it is eight
+bands: `hero` (which carries the badge, the headline, both calls to action,
+the licence-and-promises row **and** the quote form), `promotion`,
+`valueProp`, `socialProof`, `howItWorks`, `listings`, `contact` (the closing
+call beside the enquiry form) and `locationHours`.
+
+Eight more are written, styled and shipped `false`: `homeOnLand`, `meetTeam`,
+`videoShowcase`, `communities`, and the four that make up the long editorial
+argument for a manufactured home — `ticker`, `numbers`, `myth`, `cutaway`. A
+dealership that wants the twenty-minute read turns those back on and gets it.
+None of them is deleted, and none needs writing again.
 
 Three bands are gated by their data as well as their switch, and stay hidden
 when it is missing: `promotion` needs a live offer in `lib/promotions.ts`,
@@ -177,26 +192,29 @@ its own rules about which facts may not move — see the `voice` skill, and
 ## The phone
 
 A dealership's most valuable page event is a tapped telephone number, so the
-template puts one in four places and each has a switch or a data field behind
+template puts one in five places and each has a switch or a data field behind
 it rather than a hard-coded string:
 
 | Where | File | Switch |
 | --- | --- | --- |
-| The strip above the header — number, hours, licence | `components/call-bar.tsx` | `callBar` in `lib/page-config.ts` |
-| The header, beside the quote button | `components/site-header.tsx` | — |
+| The gradient strip above the header | `components/call-bar.tsx` | `callBar` in `lib/page-config.ts` |
+| The header, as the outlined button on the right | `components/site-header.tsx` | — |
 | The hero's second call to action | `components/landing.tsx` | — |
-| The band that asks for the call and nothing else | `components/call-banner.tsx` | `sections.callBanner` |
+| The closing band, beside the enquiry form | `components/landing.tsx` | `sections.contact` |
 | The button that follows a visitor down the page | `components/floating-call.tsx` | `floatingCall` |
 
 All five read `site.phone` and `site.phoneHref`, so changing the number in
 `lib/site.ts` changes every one of them.
 
-The call bar publishes its height as `--callbar-h` on `:root`, and everything
-that has to clear the fixed chrome — the sticky filter rail on `/listings`,
-the top padding on every page hero, `scroll-margin` on anchored sections —
-offsets against `--chrome-h`, which is that plus `--header-h`. So turning the
-bar off in `lib/page-config.ts` collapses the offset with it and no page needs
-a second edit. Never hard-code the header height again; read the token.
+The header is **sticky, not fixed**, and opaque rather than
+transparent-over-the-hero. Because it is in flow, no page needs top padding to
+clear it — do not add any. The two things that still have to know its height
+read `--chrome-h`: sticky rails that park beneath it (the filter bar on
+`/listings`) and `scroll-margin` on anchored sections. `--chrome-h` is
+`--header-h` plus `--callbar-h`, which `components/call-bar.tsx` publishes on
+`:root` only when the bar renders — so turning the bar off collapses the
+offset with it and no page needs a second edit. Never hard-code the header
+height; read the token.
 
 ## The enquiry form
 
@@ -209,9 +227,10 @@ already named sensibly: `name`, `email`, `phone`, `home`, `date`, `slot`,
 The landing page's two forms are different — both post to the
 `requestPreApproval` Server Action in `app/land-deals/actions.ts`, which
 forwards to `LEAD_WEBHOOK_URL` and logs the lead when that is unset.
-`components/quote-form.tsx` is four fields high on the page for somebody who
-will not scroll; `components/contact-band.tsx` is the longer one at the foot
-for somebody who has. They are told apart in the CRM by their `source`, so
+`components/quote-form.tsx` is the dark card in the hero, for somebody who
+will not scroll; `components/contact-band.tsx` is the longer one in the
+closing band, for somebody who has. Neither draws its own panel where the
+band already supplies one. They are told apart in the CRM by their `source`, so
 add a new form's source to `LEAD_SOURCES` in `lib/land/lead.ts` rather than
 letting it fall back to the map's.
 

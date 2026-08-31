@@ -33,9 +33,8 @@ export function PageHero({
 }) {
   return (
     <section
-      data-hero-scrim
       className={cx(
-        "relative isolate flex flex-col justify-end overflow-hidden pb-14 pt-[calc(var(--chrome-h)+5rem)] sm:pb-20 sm:pt-[calc(var(--chrome-h)+7rem)]",
+        "relative isolate flex flex-col justify-end overflow-hidden pb-14 pt-16 sm:pb-20 sm:pt-24",
         size === "tall" ? "min-h-[72svh]" : "min-h-[54svh]",
       )}
     >

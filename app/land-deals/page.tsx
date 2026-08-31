@@ -175,7 +175,7 @@ export default function LandDealsPage() {
       />
 
       {/* ── Hero: the headline and the map itself, above the fold ── */}
-      <section className="pb-16 pt-[calc(var(--chrome-h)+3rem)] sm:pt-[calc(var(--chrome-h)+5rem)]">
+      <section className="pb-16 pt-12 sm:pt-16">
         <Container>
           <Eyebrow index="01">
             {HQ.city}, {HQ.state} · {AREAS.length} counties · {SERVICE_RADIUS_MI}-mile radius

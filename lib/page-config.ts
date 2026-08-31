@@ -26,9 +26,8 @@
 
 export type LandingSection =
   | "hero"
-  | "trustRow"
-  | "quoteForm"
   | "promotion"
+  | "valueProp"
   | "socialProof"
   | "howItWorks"
   | "listings"
@@ -40,44 +39,49 @@ export type LandingSection =
   | "myth"
   | "cutaway"
   | "communities"
-  | "callBanner"
-  | "contactForm"
-  | "locationHours"
-  | "contact";
+  | "contact"
+  | "locationHours";
 
 /** Landing-page bands, in render order. */
 export const sections: Record<LandingSection, boolean> = {
-  /* ---- The conversion path, in the order a stranger meets it ---------- */
+  /* ---- The conversion path, in the order a stranger meets it ----------
+     This is the short arrangement: eight bands, one scroll, and a phone
+     number or a form never more than half a screen away. It is what a lot
+     selling homes wants. The long editorial read is still here — see the
+     block below — and is four `true`s away.                              */
 
-  /** Full-bleed opening scene with the headline and the calls to action. */
+  /** Opening scene: the headline, the two calls to action, the licence and
+      promises row, and the quote form, all in one band. */
   hero: true,
-  /** Licence number and the two or three promises, from `lib/company.ts`. */
-  trustRow: true,
-  /** The short lead form, high on the page for somebody who will not scroll. */
-  quoteForm: true,
   /** Current offer, drawn from `lib/promotions.ts`. Hidden when none is live. */
   promotion: true,
-  /** What buyers said afterwards. */
+  /** One photograph the width of the screen, and one sentence over it. */
+  valueProp: true,
+  /** What buyers said afterwards, and a link to where they said it. */
   socialProof: true,
-  /** Plan to keys. */
+  /** Three steps, numbered. */
   howItWorks: true,
-  /** The featured slice of the catalogue, entered by size. */
+  /** The catalogue, entered by size. */
   listings: true,
+  /** Closing band: the call on one side, the enquiry form on the other. */
+  contact: true,
+  /** Where the lot is, when it is open, and how to reach it. */
+  locationHours: true,
+
+  /* ---- Everything else -------------------------------------------------
+     Written, styled and switched off. Each is one `true` from appearing,
+     and the numbered eyebrows renumber themselves around whatever
+     survives, so the sequence stays contiguous either way.               */
+
   /** The three routes onto ground for a buyer who has none. */
-  homeOnLand: true,
-  /** Named staff from `lib/company.ts`. Hidden when the team is empty. */
-  meetTeam: true,
-  /** A single video band. Hidden until `videoShowcase` below has a URL. */
-  videoShowcase: true,
-
-  /* ---- The long editorial read ---------------------------------------
-     Off by default. This template can be either of two sites: a lean page
-     that asks for the phone call, or the twenty-minute argument for why a
-     manufactured home is a good house. These four bands are the second one,
-     and a dealership that wants it turns them back on here — the copy and
-     the artwork are all still in `components/landing.tsx`.                */
-
-  /** The scrolling band of build facts directly under the hero. */
+  homeOnLand: false,
+  /** Named staff from `lib/company.ts`. Needs somebody in `company.team`. */
+  meetTeam: false,
+  /** A single video band. Needs a URL in `videoShowcase` below. */
+  videoShowcase: false,
+  /** Communities we place homes into. */
+  communities: false,
+  /** The scrolling band of build facts. */
   ticker: false,
   /** Industry-wide cost and volume figures. */
   numbers: false,
@@ -85,21 +89,6 @@ export const sections: Record<LandingSection, boolean> = {
   myth: false,
   /** The cutaway diagram of how a section is built. */
   cutaway: false,
-
-  /* ---- Closing --------------------------------------------------------- */
-
-  /** Communities we place homes into. */
-  communities: true,
-  /** The full-width band that asks for the phone call, and nothing else. */
-  callBanner: true,
-  /** The longer enquiry form, for somebody who would rather not ring. */
-  contactForm: true,
-  /** Where the lot is and when it is open. */
-  locationHours: true,
-  /** The full-bleed closing scene. Off by default: `callBanner` above already
-      asks for the call, and three closing calls to action in a row is one
-      more than anybody answers. Turn it on for a longer, quieter ending. */
-  contact: false,
 };
 
 export type OptionalPage =

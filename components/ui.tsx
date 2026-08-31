@@ -16,7 +16,9 @@ const base =
 export const buttonStyles = {
   primary: cx(
     base,
-    "bg-[var(--btn-bg)] px-6 py-3 text-[var(--btn-fg)] hover:bg-[var(--btn-hover-bg)] hover:text-[var(--btn-hover-fg)] hover:shadow-[0_10px_30px_-12px_rgb(var(--shadow-color)/0.55)] active:scale-[0.98]",
+    /* The gradient is layered over the flat fill rather than replacing it, so
+       a skin that names no gradient (`none`) keeps exactly the button it had. */
+    "bg-[var(--btn-bg)] [background-image:var(--btn-gradient)] px-6 py-3 text-[var(--btn-fg)] hover:bg-[var(--btn-hover-bg)] hover:text-[var(--btn-hover-fg)] hover:[background-image:var(--btn-gradient-hover)] hover:shadow-[var(--button-shadow)] active:scale-[0.98]",
   ),
   outline: cx(
     base,
@@ -188,7 +190,7 @@ export function Container({
   className?: string;
 }) {
   return (
-    <div className={cx("mx-auto w-full max-w-[88rem] px-5 sm:px-8 lg:px-12", className)}>
+    <div className={cx("mx-auto w-full max-w-[80rem] px-4 sm:px-6 lg:px-8", className)}>
       {children}
     </div>
   );
@@ -208,6 +210,52 @@ const stroke = {
 };
 
 export const Icon = {
+  House: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <path d="M3 10.5 12 3l9 7.5" />
+      <path d="M5 9.8V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.8" />
+    </svg>
+  ),
+  Info: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v5M12 8h.01" />
+    </svg>
+  ),
+  Mail: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3.5 7 8.5 6 8.5-6" />
+    </svg>
+  ),
+  Send: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <path d="M21 3 10.5 13.5" />
+      <path d="M21 3 14.5 21l-4-8-8-4z" />
+    </svg>
+  ),
+  Star: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden fill="currentColor" stroke="none">
+      <path d="m12 3 2.6 5.6 6 .8-4.4 4.2 1.1 6.1L12 16.8 6.7 19.7l1.1-6.1L3.4 9.4l6-.8z" />
+    </svg>
+  ),
+  External: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <path d="M14 4h6v6M20 4l-8.5 8.5" />
+      <path d="M19 14v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />
+    </svg>
+  ),
+  Dollar: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <path d="M12 3v18" />
+      <path d="M16.5 7.5A3.5 3.5 0 0 0 13 5h-2a3 3 0 0 0 0 6h2a3 3 0 0 1 0 6h-2a3.5 3.5 0 0 1-3.5-2.5" />
+    </svg>
+  ),
+  Chat: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <path d="M4 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4z" />
+    </svg>
+  ),
   Arrow: ({ className }: IconProps) => (
     <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
       <path d="M5 12h14M13 6l6 6-6 6" />

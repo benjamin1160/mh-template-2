@@ -18,6 +18,9 @@
  */
 export type Market = {
   /** Counties the dealership actually sells into, for USDA and permitting copy. */
+  /** What people here call the area — "East Tennessee", "Central Maine".
+      Used in the headline. Absent, the headline says the state instead. */
+  regionName?: string;
   countiesServed?: string[];
   /**
    * HUD wind zone for the market — I inland, II and III coastal and
@@ -39,6 +42,7 @@ export type Market = {
 };
 
 export const market: Market = {
+  regionName: "East Tennessee",
   countiesServed: ["Blount", "Knox", "Loudon", "Sevier"],
   windZone: "I",
   thermalZone: 2,

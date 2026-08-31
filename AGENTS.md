@@ -43,11 +43,14 @@ lib/land/           Everything behind /land-deals: `areas.ts` prices each
                     coordinates and the projection, and the generated file
                     holds the county boundaries. Market data in the sense
                     above — true of one radius and of no other.
-lib/skin.ts         Skins: the whole palette, the typeface pairing, the
-                    corner radii and the primary button, as data. Two ship —
-                    `hearthline` (warm, editorial) and `nerto` (white,
-                    conversion-shaped, the look a Mobile Home Manager
-                    deployment wears). `activeSkin` picks one; that one line
+lib/skin.ts         Skins: the whole palette, the brand gradient, the
+                    typeface pairing, the corner radii and the primary
+                    button, as data. Two ship — `hearthline` (warm and
+                    editorial, a serif on limestone) and `nerto` (white
+                    ground, slate type, a blue-to-orange gradient on every
+                    primary button, system sans — the look a Mobile Home
+                    Manager deployment wears, taken from a live one rather
+                    than guessed at). `activeSkin` picks one; that one line
                     restyles the site.
 app/globals.css     Token structure and the fallback values. A skin
                     overrides whatever it names; edit here to restyle one
@@ -56,9 +59,12 @@ components/landing.tsx
                     The landing page, as an ordered list of switchable
                     bands. `/` and every `/p/<slug>` render it — edit the
                     band here and both follow. It ships in the short,
-                    conversion-shaped order; the four editorial bands
-                    (`ticker`, `numbers`, `myth`, `cutaway`) are written
-                    and switched off, one `true` away.
+                    conversion-shaped order: hero, offer, one wide
+                    photograph, reviews, three steps, the catalogue, the
+                    closing call and form, the hours. Eight more bands are
+                    written, styled and switched off — among them the whole
+                    editorial argument for a manufactured home (`ticker`,
+                    `numbers`, `myth`, `cutaway`) — each one `true` away.
 ```
 
 The catalogue is at `/listings`; `/homes` permanently redirects there. The
@@ -81,7 +87,7 @@ its founding year, its staff or its warranty terms, delete the field in
 (part of `npm run lint`) lists the template's fictional values still in
 place, and fails outright once `NEXT_PUBLIC_SITE_URL` is a real domain.
 
-Roughly 5,200 words of editorial copy in `components/landing.tsx`,
+Roughly 5,000 words of editorial copy in `components/landing.tsx`,
 `lib/faq.ts` and on `/why-manufactured`, `/start-here`, `/land-deals` and
 `/financing` are the template's own writing, and every deployment ships them identically. That is fine for one site and a problem
 for the second one sold into the same market. `npm run check:boilerplate`
