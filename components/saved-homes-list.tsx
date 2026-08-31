@@ -15,7 +15,7 @@ export function SavedHomesList({ listings }: { listings: Listing[] }) {
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="h-[28rem] animate-pulse rounded-[1.25rem] border border-line bg-surface"
+            className="h-[28rem] animate-pulse rounded-card border border-line bg-surface"
           />
         ))}
       </div>

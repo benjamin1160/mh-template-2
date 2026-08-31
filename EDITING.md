@@ -20,6 +20,19 @@ You never have to name one. Say what you want changed and the matching skill
 picks itself up. Typing `/homes`, `/photos`, `/brand`, `/land-deals` or
 `/voice` forces one.
 
+## The look
+
+Two whole looks ship in `lib/skin.ts` and one line switches between them:
+`hearthline` is warm and editorial, `nerto` is the white, blue-and-green
+conversion layout. Ask for either by name, or ask for a new one.
+
+> Switch the site to the Direct skin.
+
+> Make a skin like the Direct one but with our green as the primary and a
+> serif for headlines.
+
+> The buttons should be square, not pills.
+
 ## Pages and homepage bands
 
 The homepage is a list of bands and the site is a list of pages, and both are

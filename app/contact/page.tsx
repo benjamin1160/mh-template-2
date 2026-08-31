@@ -81,7 +81,7 @@ export default function ContactPage() {
             </Reveal>
 
             <Reveal delay={120} className="mt-14">
-              <div className="rounded-[1.25rem] border border-line bg-surface p-8">
+              <div className="rounded-card border border-line bg-surface p-8">
                 <h3 className="eyebrow">Find us</h3>
                 <dl className="mt-6 space-y-5">
                   <div>

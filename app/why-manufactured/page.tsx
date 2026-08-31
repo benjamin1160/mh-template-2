@@ -130,7 +130,7 @@ function HersScale() {
 
   const max = 150;
   return (
-    <div className="rounded-[1.25rem] border border-line bg-surface p-6 sm:p-9">
+    <div className="rounded-card border border-line bg-surface p-6 sm:p-9">
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         <h3 className="font-display text-2xl tracking-tight text-ink">The HERS index</h3>
         <span className="font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
@@ -403,7 +403,7 @@ export default function WhyPage() {
         </Reveal>
 
         <Reveal className="mt-16">
-          <div className="flex flex-col items-start gap-6 rounded-[1.25rem] border border-line bg-surface p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+          <div className="flex flex-col items-start gap-6 rounded-card border border-line bg-surface p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
             <div>
               <h3 className="font-display text-2xl tracking-tight text-ink">
                 Still not convinced?

@@ -697,3 +697,79 @@ export const priceBounds = {
   min: hasPrices ? Math.min(...priced.map((l) => l.price)) : 0,
   max: hasPrices ? Math.max(...priced.map((l) => l.price)) : 0,
 };
+
+/* ------------------------------------------------------------------ *
+ * Size categories
+ * ------------------------------------------------------------------ */
+
+/**
+ * The four buckets a buyer actually shops by — tiny, single, double, triple.
+ *
+ * A note on how these are decided, because it matters. The obvious approach
+ * is to sort purely on square footage, and plenty of dealership sites do
+ * exactly that. It produces a lie: a 1,000-square-foot double-section home
+ * filed under "Single wide" is a claim about its width, and it is wrong.
+ *
+ * So width comes from `sections`, which is the field that actually records
+ * it, and square footage is only used for the tiny bucket and as the
+ * fallback for a home whose `sections` was never filled in. The footprint
+ * ranges shown under each label are computed from the homes really in that
+ * bucket rather than being printed from a table, so they cannot drift away
+ * from the catalogue either.
+ */
+export type SizeCategory = "tiny" | "single" | "double" | "triple";
+
+/** Anything under this is a tiny home whatever its section count. */
+const TINY_MAX_SQFT = 800;
+
+/* Only reached by a home with no `sections` value — see the note above. */
+const SQFT_FALLBACK: [number, SizeCategory][] = [
+  [TINY_MAX_SQFT, "tiny"],
+  [1200, "single"],
+  [2000, "double"],
+];
+
+export function sizeCategoryOf(listing: Listing): SizeCategory {
+  if (listing.sqft < TINY_MAX_SQFT) return "tiny";
+  if (listing.sections) return listing.sections;
+  const match = SQFT_FALLBACK.find(([ceiling]) => listing.sqft < ceiling);
+  return match ? match[1] : "triple";
+}
+
+export const sizeCategoryLabels: Record<SizeCategory, string> = {
+  tiny: "Tiny home",
+  single: "Single wide",
+  double: "Double wide",
+  triple: "Triple wide",
+};
+
+export const sizeCategoryOrder: SizeCategory[] = ["tiny", "single", "double", "triple"];
+
+export type SizeCategoryFacet = {
+  id: SizeCategory;
+  label: string;
+  /** How many homes are in it. Zero means the button is not worth showing. */
+  count: number;
+  /** The real footprint range of the homes in it, e.g. "812–1,144 sq ft". */
+  range?: string;
+};
+
+/** The four buckets, measured against whatever catalogue is passed in. */
+export function sizeCategoryFacets(from: Listing[] = listings): SizeCategoryFacet[] {
+  return sizeCategoryOrder.map((id) => {
+    const inBucket = from.filter((l) => sizeCategoryOf(l) === id);
+    const sizes = inBucket.map((l) => l.sqft);
+    const low = Math.min(...sizes);
+    const high = Math.max(...sizes);
+    return {
+      id,
+      label: sizeCategoryLabels[id],
+      count: inBucket.length,
+      range: inBucket.length
+        ? low === high
+          ? `${low.toLocaleString()} sq ft`
+          : `${low.toLocaleString()}–${high.toLocaleString()} sq ft`
+        : undefined,
+    };
+  });
+}

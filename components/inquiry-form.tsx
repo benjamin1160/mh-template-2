@@ -64,7 +64,7 @@ export function InquiryForm({
     return (
       <div
         className={cx(
-          "flex flex-col items-start gap-5 rounded-[1.25rem] border border-line bg-surface",
+          "flex flex-col items-start gap-5 rounded-card border border-line bg-surface",
           compact ? "p-6" : "p-8 sm:p-10",
         )}
       >
@@ -96,7 +96,7 @@ export function InquiryForm({
       onSubmit={onSubmit}
       noValidate
       className={cx(
-        "rounded-[1.25rem] border border-line bg-surface",
+        "rounded-card border border-line bg-surface",
         compact ? "p-6" : "p-6 sm:p-9",
       )}
     >

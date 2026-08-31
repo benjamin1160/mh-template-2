@@ -1,7 +1,7 @@
 "use server";
 
 import { AREAS } from "@/lib/land/areas";
-import type { LeadField, LeadState } from "@/lib/land/lead";
+import { LEAD_SOURCES, type LeadField, type LeadSource, type LeadState } from "@/lib/land/lead";
 
 const digits = (s: string) => s.replace(/\D/g, "");
 const clean = (v: FormDataEntryValue | null, max = 200) =>
@@ -54,11 +54,19 @@ export async function requestPreApproval(
     };
   }
 
+  /* Which form the lead came off, so the CRM can tell the map's pre-approval
+     request from the landing page's quote band. Allowlisted rather than
+     echoed: this arrives from the client like everything else here. */
+  const submitted = clean(formData.get("source"), 40);
+  const source = LEAD_SOURCES.includes(submitted as LeadSource)
+    ? submitted
+    : "land-deals-map";
+
   const payload = {
     ...lead,
     county:
       AREAS.find((a) => a.slug === lead.county)?.county ?? lead.county ?? "",
-    source: "land-deals-map",
+    source,
     submittedAt: new Date().toISOString(),
   };
 

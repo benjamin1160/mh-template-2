@@ -1,6 +1,6 @@
 {
   "components/landing.tsx": {
-    "words": 931,
+    "words": 953,
     "hashes": [
       "c2c0849172c9e775",
       "1bae17df57326c52",
@@ -24,6 +24,7 @@
       "16edfb809fdc8dbc",
       "a31db1863e900b3a",
       "60e427dbc4496646",
+      "5715fd6fb4bb8033",
       "3ffd62efbdb6bd48",
       "932065af064fb67e",
       "76bfd5c3cf76357a",
@@ -186,6 +187,21 @@
       "8152e6a0bac81de8",
       "e8db0cac9e236685",
       "a6e2e0a52c2e1ae8"
+    ]
+  },
+  "components/quote-form.tsx": {
+    "words": 27,
+    "hashes": [
+      "0c9d467b6ad9cc54"
+    ]
+  },
+  "components/location-hours.tsx": {
+    "words": 91,
+    "hashes": [
+      "c9c86b373cf55199",
+      "eb5dfbd73c2f2aa9",
+      "3fdab80411b8edfc",
+      "d0835d6c3b8a29f0"
     ]
   },
   "lib/faq.ts": {

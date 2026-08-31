@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { requestPreApproval } from "@/app/land-deals/actions";
 import { BY_PRICE } from "@/lib/land/areas";
-import { EMPTY_LEAD_STATE } from "@/lib/land/lead";
+import { EMPTY_LEAD_STATE, type LeadSource } from "@/lib/land/lead";
 import { money } from "@/lib/format";
 import { site } from "@/lib/site";
 import { buttonStyles, cx, Icon } from "./ui";
@@ -16,14 +16,14 @@ const field =
  * resolves locally, this one posts to a Server Action that forwards to
  * `LEAD_WEBHOOK_URL` — see `app/land-deals/actions.ts`.
  */
-export function PreApprovalForm() {
+export function PreApprovalForm({ source = "land-deals-map" }: { source?: LeadSource }) {
   const [state, action, pending] = useActionState(requestPreApproval, EMPTY_LEAD_STATE);
   const err = state.fieldErrors ?? {};
   const was = state.values ?? {};
 
   if (state.status === "ok") {
     return (
-      <div className="flex flex-col items-start gap-5 rounded-[1.25rem] border border-line bg-surface p-8 sm:p-10">
+      <div className="flex flex-col items-start gap-5 rounded-card border border-line bg-surface p-8 sm:p-10">
         <span className="grid size-12 place-items-center rounded-full bg-moss text-paper dark:text-ink">
           <Icon.Check className="size-6" />
         </span>
@@ -46,6 +46,8 @@ export function PreApprovalForm() {
 
   return (
     <form action={action} className="grid gap-5 sm:grid-cols-2">
+      <input type="hidden" name="source" value={source} />
+
       {/* Honeypot: real people leave this empty. */}
       <input
         type="text"

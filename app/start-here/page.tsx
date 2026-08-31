@@ -259,7 +259,7 @@ export default function StartHerePage() {
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
           {ROUTES.map((r, i) => (
             <Reveal key={r.name} delay={i * 100}>
-              <div className="flex h-full flex-col rounded-[1.25rem] border border-line bg-surface p-8">
+              <div className="flex h-full flex-col rounded-card border border-line bg-surface p-8">
                 <div className="flex items-center justify-between gap-4">
                   <h3 className="font-display text-2xl tracking-tight text-ink">{r.name}</h3>
                   <Badge tone={r.tone}>{r.verdict}</Badge>

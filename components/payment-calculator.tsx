@@ -101,7 +101,7 @@ export function PaymentCalculator({
   return (
     <div
       className={cx(
-        "rounded-[1.25rem] border border-line bg-surface",
+        "rounded-card border border-line bg-surface",
         compact ? "p-6" : "p-6 sm:p-9",
       )}
     >

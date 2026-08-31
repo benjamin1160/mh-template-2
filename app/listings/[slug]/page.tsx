@@ -265,7 +265,7 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
                 load-bearing above the marriage line, so most of them can move before
                 the build lock date.
               </p>
-              <div className="mt-8 overflow-hidden rounded-[1.25rem] border border-line bg-surface p-4 text-ink sm:p-8">
+              <div className="mt-8 overflow-hidden rounded-card border border-line bg-surface p-4 text-ink sm:p-8">
                 <FloorPlan
                   plan={plan}
                   label={`${listing.name} floor plan, ${plan.width} by ${plan.length} feet`}
@@ -316,7 +316,7 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
           {/* Sticky rail */}
           <aside className="lg:sticky lg:top-28 lg:self-start">
             <div className="flex flex-col gap-6">
-              <div className="rounded-[1.25rem] border border-line bg-surface p-6">
+              <div className="rounded-card border border-line bg-surface p-6">
                 <h2 className="eyebrow">Specification</h2>
                 <dl className="mt-5">
                   {listing.model && <SpecRow label="Model" value={listing.model} />}
@@ -364,7 +364,7 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
               {community && (
                 <Link
                   href={`/communities#${community.slug}`}
-                  className="group rounded-[1.25rem] border border-line bg-surface p-6 transition-colors hover:border-line-strong"
+                  className="group rounded-card border border-line bg-surface p-6 transition-colors hover:border-line-strong"
                 >
                   <p className="eyebrow">Sited at</p>
                   <p className="mt-3 font-display text-2xl tracking-tight text-ink">

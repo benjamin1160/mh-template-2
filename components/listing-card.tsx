@@ -85,7 +85,7 @@ export function ListingCard({
   return (
     <article
       className={cx(
-        "group relative flex flex-col overflow-hidden rounded-[1.25rem] border border-line bg-surface transition-all duration-500 hover:-translate-y-1 hover:border-line-strong hover:shadow-[0_28px_60px_-38px_rgb(var(--shadow-color)/0.7)]",
+        "group relative flex flex-col overflow-hidden rounded-card border border-line bg-surface transition-all duration-500 hover:-translate-y-1 hover:border-line-strong hover:shadow-[0_28px_60px_-38px_rgb(var(--shadow-color)/0.7)]",
         listing.status === "sold" && "opacity-90",
         className,
       )}
@@ -185,7 +185,7 @@ export function ListingRow({ listing }: { listing: Listing }) {
   const cover = coverKind(listing);
 
   return (
-    <article className="group relative grid grid-cols-1 gap-6 overflow-hidden rounded-[1.25rem] border border-line bg-surface p-4 transition-all duration-500 hover:border-line-strong hover:shadow-[0_24px_50px_-38px_rgb(var(--shadow-color)/0.6)] sm:grid-cols-[minmax(0,15rem)_1fr] sm:p-5">
+    <article className="group relative grid grid-cols-1 gap-6 overflow-hidden rounded-card border border-line bg-surface p-4 transition-all duration-500 hover:border-line-strong hover:shadow-[0_24px_50px_-38px_rgb(var(--shadow-color)/0.6)] sm:grid-cols-[minmax(0,15rem)_1fr] sm:p-5">
       <div className="grain relative aspect-[4/3] overflow-hidden rounded-xl bg-surface-2 sm:aspect-[5/4]">
         <Scene
           kind={cover}

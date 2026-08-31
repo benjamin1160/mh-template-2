@@ -61,10 +61,38 @@ token list redefined under `.dark`.
 - Edit both the light and the `.dark` block, or the change only lands in one
   theme.
 
-Fonts are Fraunces (display), Geist (UI) and Geist Mono (data), loaded via
-`next/font/google` in `app/layout.tsx` and self-hosted at build time. To
-change one, swap the import there — the CSS variables it sets are what
-`globals.css` consumes.
+### Skins
+
+`lib/skin.ts` holds whole looks as data — palette light and dark, the
+typeface pairing, the corner radii and the primary button's colours. Two
+ship:
+
+| Skin | What it is |
+| --- | --- |
+| `hearthline` | Warm and editorial. Serif display face on limestone paper, ember accent, pill buttons. |
+| `nerto` ("Direct") | White ground, slate text, blue primary that turns green on hover, grotesk throughout, squared corners. The look a Mobile Home Manager deployment wears. |
+
+`activeSkin` at the foot of that file picks one, and that single line
+restyles the entire site. So there are two ways to recolour, and which one
+is right depends on the ask:
+
+- **"Make this site green"** — one deployment, one-off. Edit the tokens in
+  `app/globals.css`. A skin only overrides the tokens it names, so the rest
+  still comes from there.
+- **"We need a look for dealerships who want X"** — reusable. Copy a skin
+  block in `lib/skin.ts`, change the values, add the id to `SkinId`. Now
+  every future deployment can wear it by changing one line.
+
+Whichever you choose: never hardcode a hex in a component. `--btn-bg`,
+`--corner-button` and `--corner-card` exist precisely so buttons and cards
+follow the skin rather than pinning a shape the next skin has to fight.
+
+Typefaces are the one thing a skin cannot fully own: `next/font` has to see
+its calls literally to self-host the files at build time. So every family a
+skin may ask for is loaded in `app/layout.tsx` and the skin picks between
+them by name (`display-serif`, `ui-sans`, `grotesk`, `mono`). Adding a
+typeface means adding the `next/font` call there *and* the entry in
+`FontChoice`.
 
 The logo is `components/logo.tsx`, drawn as inline SVG.
 

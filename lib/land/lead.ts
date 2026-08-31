@@ -5,6 +5,19 @@
  * only export async functions, so the initial-state constant cannot live there.
  */
 
+/**
+ * Where a lead was captured. Every form that posts to `requestPreApproval`
+ * names itself with one of these so the CRM can tell them apart; anything
+ * else is rejected back to the default rather than trusted.
+ */
+export const LEAD_SOURCES = [
+  "land-deals-map",
+  "landing-quote",
+  "prequalify-page",
+] as const;
+
+export type LeadSource = (typeof LEAD_SOURCES)[number];
+
 export const LEAD_FIELDS = [
   "name",
   "phone",

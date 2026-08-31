@@ -39,6 +39,7 @@ const PLACEHOLDERS = {
     ["4820 Foothills Works Road", "the fictional lot address"],
   ],
   "lib/company.ts": [
+    ["TN-MHD-0000000", "an invented dealer licence number"],
     ["Ruth Okonjo-Vance", "an invented member of staff"],
     ["Sam Petrosyan", "an invented member of staff"],
     ["Marta Lindqvist", "an invented member of staff"],

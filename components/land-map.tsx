@@ -73,7 +73,7 @@ export function LandMap() {
   return (
     <div className="flex flex-col gap-4">
       {/* Budget filter */}
-      <div className="flex flex-col gap-3 rounded-[1.25rem] border border-line bg-surface p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
+      <div className="flex flex-col gap-3 rounded-card border border-line bg-surface p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-5">
         <label htmlFor="budget-filter" className="shrink-0 text-[0.95rem] text-ink">
           What can you pay a month?
         </label>
@@ -101,7 +101,7 @@ export function LandMap() {
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_21rem]">
         {/* ── The map ── */}
         <figure
-          className="relative -mx-5 overflow-hidden border-y border-line sm:mx-0 sm:rounded-[1.25rem] sm:border"
+          className="relative -mx-5 overflow-hidden border-y border-line sm:mx-0 sm:rounded-card sm:border"
           style={{ backgroundColor: WATER }}
         >
           <svg
@@ -439,7 +439,7 @@ export function LandMap() {
 
         {/* ── Detail card ── */}
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <div className="rounded-[1.25rem] border border-line bg-surface p-5">
+          <div className="rounded-card border border-line bg-surface p-5">
             <p className="eyebrow">
               {active.miles === 0 ? "Right here" : `${active.miles} miles out`}
             </p>

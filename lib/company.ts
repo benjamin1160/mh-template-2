@@ -67,6 +67,16 @@ export type Company = {
   /** One-line note under the team grid, e.g. about how nobody works on commission. */
   teamNote?: string;
 
+  /** Dealer licence number, where the state issues one and the business
+      publishes it. Shown in the trust row under the hero and nowhere else.
+      Omit it rather than inventing one — an unverifiable licence number is
+      the single worst field on this list to guess at. */
+  licenseId?: string;
+  /** Short claims for the trust row under the hero, three or four at most.
+      Every one is a promise the business has to keep, so write them from what
+      it already advertises and delete the rest. */
+  badges?: string[];
+
   /** Structural warranty on a new home, in months. Omit to make no warranty claim. */
   warrantyMonths?: number;
   /** Transport included in the listed price, in miles from the lot. */
@@ -77,6 +87,8 @@ export type Company = {
 
 export const company: Company = {
   founded: 1994,
+  licenseId: "TN-MHD-0000000",
+  badges: ["Financing available", "Delivery and set included", "Own set crew"],
   homesSoldWords: "four thousand",
   teamSize: 9,
   homesOpenOnLot: 4,

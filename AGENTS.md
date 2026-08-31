@@ -41,7 +41,15 @@ lib/land/           Everything behind /land-deals: `areas.ts` prices each
                     coordinates and the projection, and the generated file
                     holds the county boundaries. Market data in the sense
                     above — true of one radius and of no other.
-app/globals.css     Design tokens — the whole palette, light and dark.
+lib/skin.ts         Skins: the whole palette, the typeface pairing, the
+                    corner radii and the primary button, as data. Two ship —
+                    `hearthline` (warm, editorial) and `nerto` (white,
+                    conversion-shaped, the look a Mobile Home Manager
+                    deployment wears). `activeSkin` picks one; that one line
+                    restyles the site.
+app/globals.css     Token structure and the fallback values. A skin
+                    overrides whatever it names; edit here to restyle one
+                    deployment without adding a skin.
 components/landing.tsx
                     The landing page, as an ordered list of switchable
                     bands. `/` and every `/p/<slug>` render it — edit the
@@ -51,6 +59,12 @@ components/landing.tsx
 
 The catalogue is at `/listings`; `/homes` permanently redirects there. The
 data file is still `lib/homes.ts` — the route was renamed, the file was not.
+
+Homes are browsed by size first — tiny, single, double, triple. The bucket
+comes from `sections` where the home has one, never from square footage
+alone, because "single wide" is a claim about width and filing a 1,000 sq ft
+double-section home under it would be false. Buckets with no homes in them
+are not rendered.
 
 Detailed conventions and recipes are in `.claude/skills/` — `homes`,
 `photos`, `brand`, `voice` and `land-deals`. Read the matching one before

@@ -34,7 +34,7 @@ enquiry form — renders but sits inert, and the page says so.
 | --- | --- |
 | `/` | An ordered list of switchable bands — hero, offer banner, "no land? start here", the team, video, testimonials, five-step process, industry numbers, myth-vs-fact, nine-layer construction cutaway, featured homes, communities, closing CTA. Order and switches live in `components/landing.tsx` and `lib/page-config.ts` |
 | `/p/[slug]` | The same landing narrowed to one series — a campaign page that cannot drift away from the front page, because it is the front page |
-| `/listings` | Faceted catalogue — search, price range, beds, baths, series, sections, style, availability, five sort orders, grid/list, URL-synced and shareable |
+| `/listings` | Size buckets first — tiny, single, double, triple, counted and measured from the catalogue — then a faceted browser — search, price range, beds, baths, series, sections, style, availability, five sort orders, grid/list, URL-synced and shareable |
 | `/listings/[slug]` | Gallery with lightbox, scale floor plan with room dimensions, spec sheet, feature accordion, payment calculator, booking form, related homes, `SingleFamilyResidence` JSON-LD |
 | `/communities` | Land-lease vs resident-owned vs fee-simple explainer, then each community with amenities and the homes sited there |
 | `/why-manufactured` | HUD Code timeline, manufactured/modular/site-built comparison table, HERS scale, an honest "where the sceptics are right" section, FAQ |
@@ -113,7 +113,12 @@ components/
   assembly-diagram.tsx
   listings-browser.tsx  Filtering, sorting and URL sync
   payment-calculator.tsx
-app/globals.css     Design tokens — one place for the whole palette
+  skin.ts           Skins — palette, typefaces, radii and the primary
+                    button, as data. `hearthline` is the warm editorial
+                    look; `nerto` is the white, conversion-shaped one a
+                    Mobile Home Manager site wears. `activeSkin` picks.
+app/globals.css     Token structure and fallback values. A skin overrides
+                    what it names; edit here for a one-off restyle.
 ```
 
 ### Adding a home

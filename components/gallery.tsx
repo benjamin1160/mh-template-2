@@ -55,7 +55,7 @@ export function Gallery({
   return (
     <>
       <figure className="flex flex-col gap-3">
-        <div className="group grain relative aspect-[16/10] overflow-hidden rounded-[1.25rem] border border-line bg-surface-2">
+        <div className="group grain relative aspect-[16/10] overflow-hidden rounded-card border border-line bg-surface-2">
           {index === 0 ? (
             <ViewTransition name={`home-${slug}`}>
               <Scene

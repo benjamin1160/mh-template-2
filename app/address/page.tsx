@@ -46,7 +46,7 @@ export default function AddressPage() {
       <Section>
         <div className="grid gap-12 lg:grid-cols-3">
           <Reveal>
-            <div className="flex h-full flex-col gap-4 rounded-[1.25rem] border border-line bg-surface p-8">
+            <div className="flex h-full flex-col gap-4 rounded-card border border-line bg-surface p-8">
               <span className="grid size-11 place-items-center rounded-full bg-surface-2 text-ember">
                 <Icon.Pin className="size-5" />
               </span>
@@ -69,7 +69,7 @@ export default function AddressPage() {
           </Reveal>
 
           <Reveal delay={90}>
-            <div className="flex h-full flex-col gap-4 rounded-[1.25rem] border border-line bg-surface p-8">
+            <div className="flex h-full flex-col gap-4 rounded-card border border-line bg-surface p-8">
               <span className="grid size-11 place-items-center rounded-full bg-surface-2 text-ember">
                 <Icon.Clock className="size-5" />
               </span>
@@ -85,7 +85,7 @@ export default function AddressPage() {
           </Reveal>
 
           <Reveal delay={180}>
-            <div className="flex h-full flex-col gap-4 rounded-[1.25rem] border border-line bg-surface p-8">
+            <div className="flex h-full flex-col gap-4 rounded-card border border-line bg-surface p-8">
               <span className="grid size-11 place-items-center rounded-full bg-surface-2 text-ember">
                 <Icon.Phone className="size-5" />
               </span>

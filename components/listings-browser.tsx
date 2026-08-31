@@ -2,6 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { SizeCategories } from "./size-categories";
 import { ListingCard, ListingRow } from "./listing-card";
 import { buttonStyles, cx, Icon } from "./ui";
 import { money } from "@/lib/format";
@@ -10,10 +11,12 @@ import {
   priceBounds,
   sectionLabels,
   seriesList,
+  sizeCategoryOf,
   styleLabels,
   type ArchStyle,
   type Listing,
   type Sections,
+  type SizeCategory,
 } from "@/lib/homes";
 
 const ALL_SORTS = [
@@ -31,6 +34,7 @@ const SORTS = ALL_SORTS.filter((s) => hasPrices || !s.id.startsWith("price"));
 
 const SERIES = seriesList;
 const SECTIONS: Sections[] = ["single", "double", "triple"];
+const SIZES: SizeCategory[] = ["tiny", "single", "double", "triple"];
 const STYLES = Object.keys(styleLabels) as ArchStyle[];
 
 const STEP = 2500;
@@ -39,6 +43,8 @@ const CEIL = hasPrices ? Math.ceil(priceBounds.max / STEP) * STEP : 0;
 
 type Filters = {
   q: string;
+  /** The primary facet: tiny / single / double / triple. Null is "any". */
+  size: SizeCategory | null;
   series: string[];
   sections: string[];
   styles: string[];
@@ -52,6 +58,7 @@ type Filters = {
 
 const EMPTY: Filters = {
   q: "",
+  size: null,
   series: [],
   sections: [],
   styles: [],
@@ -73,6 +80,9 @@ function fromParams(params: URLSearchParams): Filters {
   const sort = params.get("sort") as SortId | null;
   return {
     q: params.get("q") ?? "",
+    size: SIZES.includes(params.get("size") as SizeCategory)
+      ? (params.get("size") as SizeCategory)
+      : null,
     series: list("series"),
     sections: list("sections"),
     styles: list("style"),
@@ -88,6 +98,7 @@ function fromParams(params: URLSearchParams): Filters {
 function toParams(f: Filters): string {
   const p = new URLSearchParams();
   if (f.q) p.set("q", f.q);
+  if (f.size) p.set("size", f.size);
   if (f.series.length) p.set("series", f.series.join(","));
   if (f.sections.length) p.set("sections", f.sections.join(","));
   if (f.styles.length) p.set("style", f.styles.join(","));
@@ -103,6 +114,7 @@ function toParams(f: Filters): string {
 function activeCount(f: Filters) {
   return (
     (f.q ? 1 : 0) +
+    (f.size ? 1 : 0) +
     f.series.length +
     f.sections.length +
     f.styles.length +
@@ -183,6 +195,7 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
 
     const filtered = listings.filter((l) => {
       if (filters.availableOnly && l.status !== "available") return false;
+      if (filters.size && sizeCategoryOf(l) !== filters.size) return false;
       if (filters.series.length && !(l.series && filters.series.includes(l.series))) return false;
       if (filters.sections.length && !(l.sections && filters.sections.includes(l.sections)))
         return false;
@@ -401,6 +414,15 @@ export function ListingsBrowser({ listings }: { listings: Listing[] }) {
       )}
 
       <div className="min-w-0">
+        {/* The primary facet, above everything else and in the main column
+            rather than the filter rail — this is how most people shop. */}
+        <SizeCategories
+          from={listings}
+          active={filters.size}
+          onSelect={(size) => set("size", size)}
+          className="mb-8"
+        />
+
         <div className="sticky top-[4.5rem] z-20 -mx-5 mb-8 flex flex-wrap items-center gap-3 border-b border-line bg-paper/90 px-5 py-4 backdrop-blur-xl sm:-mx-8 sm:px-8 lg:top-20 lg:mx-0 lg:rounded-full lg:border lg:px-6">
           <p className="font-mono text-[0.78rem] uppercase tracking-[0.14em] text-muted">
             <span className="text-ink">{results.length}</span> of {listings.length} homes

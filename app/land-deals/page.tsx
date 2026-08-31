@@ -269,7 +269,7 @@ export default function LandDealsPage() {
           lede="The order matters more than anything else on this page. Taken backwards, it costs people a season and sometimes a deposit."
         />
 
-        <ol className="mt-14 grid gap-px overflow-hidden rounded-[1.25rem] border border-line bg-line md:grid-cols-2 xl:grid-cols-4">
+        <ol className="mt-14 grid gap-px overflow-hidden rounded-card border border-line bg-line md:grid-cols-2 xl:grid-cols-4">
           {STEPS.map((s, i) => (
             <Reveal as="li" key={s.n} delay={i * 70} className="bg-paper p-7">
               <span className="font-mono text-xs text-ember">{s.n}</span>
@@ -280,7 +280,7 @@ export default function LandDealsPage() {
         </ol>
 
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <div className="rounded-[1.25rem] border border-line bg-surface p-7">
+          <div className="rounded-card border border-line bg-surface p-7">
             <h3 className="font-display text-xl tracking-tight text-ink">In that payment</h3>
             <ul className="mt-5 space-y-3">
               {INCLUDED.map((i) => (
@@ -291,7 +291,7 @@ export default function LandDealsPage() {
               ))}
             </ul>
           </div>
-          <div className="rounded-[1.25rem] border border-line bg-surface p-7">
+          <div className="rounded-card border border-line bg-surface p-7">
             <h3 className="font-display text-xl tracking-tight text-ink">Budget separately</h3>
             <ul className="mt-5 space-y-3">
               {NOT_INCLUDED.map((i) => (
@@ -347,7 +347,7 @@ export default function LandDealsPage() {
             </p>
           </div>
 
-          <div className="rounded-[1.25rem] border border-line bg-paper p-6 sm:p-9">
+          <div className="rounded-card border border-line bg-paper p-6 sm:p-9">
             <PreApprovalForm />
           </div>
         </div>
