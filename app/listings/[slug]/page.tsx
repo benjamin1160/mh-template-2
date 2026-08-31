@@ -113,7 +113,7 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <Container className="pb-16 pt-28 sm:pt-32">
+      <Container className="pb-16 pt-[calc(var(--chrome-h)+3rem)] sm:pt-[calc(var(--chrome-h)+4rem)]">
         {/* ---------------- Header ---------------- */}
         <nav aria-label="Breadcrumb" className="mb-8">
           <ol className="flex flex-wrap items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
@@ -391,7 +391,7 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
           The calculator needs a price to be worth anything. Where a home is
           quoted on enquiry the section becomes the enquiry itself rather
           than a calculator seeded with a made-up number. */}
-      <section id="payment" className="scroll-mt-24 border-y border-line bg-surface">
+      <section id="payment" className="scroll-mt-[calc(var(--chrome-h)+1.5rem)] border-y border-line bg-surface">
         <Container className="py-20 sm:py-24">
           <Reveal>
             <SectionHeading
@@ -421,7 +421,7 @@ export default async function ListingPage(props: PageProps<"/listings/[slug]">) 
               </Reveal>
             )}
             <Reveal delay={120} className="min-w-0">
-              <div id="book" className="scroll-mt-24">
+              <div id="book" className="scroll-mt-[calc(var(--chrome-h)+1.5rem)]">
                 <InquiryForm defaultHome={listing.slug} />
               </div>
             </Reveal>

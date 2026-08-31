@@ -13,6 +13,7 @@
 export const LEAD_SOURCES = [
   "land-deals-map",
   "landing-quote",
+  "landing-contact",
   "prequalify-page",
 ] as const;
 
@@ -23,6 +24,11 @@ export const LEAD_FIELDS = [
   "phone",
   "email",
   "county",
+  /* Free text, and deliberately not `county`: the landing page's contact band
+     asks where somebody wants to live before they know whether we serve it,
+     and a select would make them answer a question about our delivery radius
+     instead of about themselves. */
+  "location",
   "landStatus",
   "budget",
   "notes",

@@ -51,6 +51,7 @@ const PLACEHOLDERS = {
     ["transport within 150 miles", "a price inclusion the client may not offer"],
     ["10% at order, 40%", "a deposit schedule the client may not use"],
     ["warrantyMonths: 12", "a warranty term the client may not offer"],
+    ["query=Hearthline", "a reviews link pointing at the fictional business"],
   ],
 };
 

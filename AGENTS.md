@@ -19,6 +19,8 @@ lib/site.ts         Business name, phone, address, canonical URL.
 lib/page-config.ts  Which bands the landing page renders, in what order,
                     and which routes exist at all. Turning a page off
                     redirects it to `/` and removes its links everywhere.
+                    Also the two pieces of phone chrome: `callBar`, the
+                    strip above the header, and `floatingCall`.
 lib/navigation.ts   Header, drawer and footer links, filtered through
                     page-config. Add a route here, not as a stray anchor.
 lib/faq.ts          The questions. `/faq` shows all of them, the foot of
@@ -53,8 +55,10 @@ app/globals.css     Token structure and the fallback values. A skin
 components/landing.tsx
                     The landing page, as an ordered list of switchable
                     bands. `/` and every `/p/<slug>` render it — edit the
-                    band here and both follow. The order lives in this
-                    file and nowhere else.
+                    band here and both follow. It ships in the short,
+                    conversion-shaped order; the four editorial bands
+                    (`ticker`, `numbers`, `myth`, `cutaway`) are written
+                    and switched off, one `true` away.
 ```
 
 The catalogue is at `/listings`; `/homes` permanently redirects there. The
@@ -77,7 +81,7 @@ its founding year, its staff or its warranty terms, delete the field in
 (part of `npm run lint`) lists the template's fictional values still in
 place, and fails outright once `NEXT_PUBLIC_SITE_URL` is a real domain.
 
-Roughly 4,900 words of editorial copy in `components/landing.tsx`,
+Roughly 5,200 words of editorial copy in `components/landing.tsx`,
 `lib/faq.ts` and on `/why-manufactured`, `/start-here`, `/land-deals` and
 `/financing` are the template's own writing, and every deployment ships them identically. That is fine for one site and a problem
 for the second one sold into the same market. `npm run check:boilerplate`

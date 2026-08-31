@@ -21,6 +21,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { AssemblyDiagram, assemblyLegend } from "@/components/assembly-diagram";
 import { Scene } from "@/components/artwork/scene";
+import { CallBanner } from "@/components/call-banner";
+import { ContactBand } from "@/components/contact-band";
 import { CountUp } from "@/components/count-up";
 import { ListingCard } from "@/components/listing-card";
 import { Marquee } from "@/components/marquee";
@@ -241,7 +243,7 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
           <section
             id="hero"
             data-hero-scrim
-            className="relative isolate flex flex-col overflow-hidden bg-ink pb-14 dark:bg-surface sm:pb-16 lg:min-h-[94svh] lg:justify-end lg:bg-transparent lg:pb-20 lg:pt-32 dark:lg:bg-transparent"
+            className="relative isolate flex flex-col overflow-hidden bg-ink pb-14 dark:bg-surface sm:pb-16 lg:min-h-[94svh] lg:justify-end lg:bg-transparent lg:pb-20 lg:pt-[calc(var(--chrome-h)+5rem)] dark:lg:bg-transparent"
           >
             {/* One photograph, two layouts. Up to `lg` it is a landscape band at
                 the top of a dark section — a full-bleed crop of a landscape shot
@@ -269,7 +271,15 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
 
             <Container className="mt-9 sm:mt-10 lg:mt-0">
               <div className="max-w-4xl">
-                <Eyebrow index={index} className="!text-white/70">
+                {/* The one line a stranger reads before the headline: who this is
+                    for and where it is. Every word of it comes from `site`, so it
+                    localises itself the moment the address does. */}
+                <p className="inline-flex items-center gap-2.5 rounded-button border border-white/25 bg-white/10 px-4 py-2 text-[0.8rem] text-white backdrop-blur-md">
+                  <Icon.Check className="size-4 shrink-0 text-moss-soft" />
+                  Trusted by families in {site.address.city}, {site.address.region}
+                </p>
+
+                <Eyebrow index={index} className="mt-6 !text-white/70">
                   {site.name} · {site.address.city}, {site.address.region}
                 </Eyebrow>
 
@@ -303,6 +313,17 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
                     Explore Available Homes
                     <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                   </ButtonLink>
+                  {/* The second action is the telephone, not a second page.
+                      On a phone this is the fastest route from the hero to a
+                      person, and it is the one a dealership actually wants. */}
+                  <a
+                    href={site.phoneHref}
+                    className="inline-flex w-full items-center justify-center gap-2.5 rounded-button bg-moss px-7 py-4 text-base font-medium text-white transition-transform hover:scale-[1.02] active:scale-[0.99] dark:text-paper sm:w-auto"
+                    aria-label={`Call ${site.name} on ${site.phone}`}
+                  >
+                    <Icon.Phone className="size-4 shrink-0" />
+                    Call {site.phone}
+                  </a>
                   <Link
                     href="/why-manufactured"
                     className="group inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/30 px-7 py-4 text-base text-white transition-colors hover:border-white hover:bg-white hover:text-ink sm:w-auto"
@@ -400,15 +421,6 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
       render: () => <TrustRow />,
     },
     {
-      key: "ticker",
-      show: sections.ticker,
-      render: () => (
-          <div className="border-y border-line bg-ink py-4 text-paper dark:bg-surface dark:text-ink">
-            <Marquee items={TICKER} />
-          </div>
-      ),
-    },
-    {
       key: "quoteForm",
       show: sections.quoteForm,
       numbered: true,
@@ -440,6 +452,150 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
       key: "promotion",
       show: sections.promotion && !!promotion,
       render: () => <PromotionBanner promotion={promotion!} />,
+    },
+    {
+      key: "socialProof",
+      show: sections.socialProof,
+      numbered: true,
+      render: (index) => (
+          <section id="social-proof" className="border-y border-line bg-surface">
+            <Container className="py-20 sm:py-28">
+              <Reveal>
+                <SectionHeading
+                  index={index}
+                  eyebrow="From the driveway"
+                  title="What our customers say"
+                  /* The link, where the business publishes one. It is the whole
+                     point of the band: three quotes we chose ourselves prove
+                     nothing, and a source we do not control proves rather a
+                     lot. No `reviewsUrl` in `lib/company.ts`, no link. */
+                  action={
+                    company.reviewsUrl ? (
+                      <a
+                        href={company.reviewsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 text-[0.95rem] font-medium text-ink underline-offset-4 hover:underline"
+                      >
+                        All reviews on {company.reviewsLabel ?? "the web"}
+                        <Icon.Arrow className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+                      </a>
+                    ) : undefined
+                  }
+                />
+              </Reveal>
+              <div className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-line sm:grid-cols-3">
+                {TESTIMONIALS.map((t, i) => (
+                  <Reveal key={i} delay={i * 100} as="figure" className="flex flex-col gap-6 bg-paper p-8">
+                    <Icon.Quote className="size-7 text-ember opacity-60" />
+                    <blockquote className="flex-1 font-display text-lg leading-relaxed tracking-tight text-ink">
+                      {t.quote}
+                    </blockquote>
+                    <figcaption className="border-t border-line pt-5">
+                      <p className="text-sm font-medium text-ink">{t.name}</p>
+                      <p className="mt-1 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
+                        {t.detail}
+                      </p>
+                    </figcaption>
+                  </Reveal>
+                ))}
+              </div>
+            </Container>
+          </section>
+      ),
+    },
+    {
+      key: "howItWorks",
+      show: sections.howItWorks,
+      numbered: true,
+      render: (index) => (
+          <section id="how-it-works" className="border-y border-line bg-ink text-paper dark:bg-surface dark:text-ink">
+            <Container className="py-20 sm:py-28 lg:py-32">
+              <Reveal>
+                <Eyebrow index={index} className="!text-current opacity-60">
+                  Plan to keys
+                </Eyebrow>
+                <h2 className="mt-5 max-w-2xl font-display text-headline text-balance">
+                  Five steps, eleven weeks,
+                  <br />
+                  one very good Wednesday.
+                </h2>
+              </Reveal>
+
+              <ol className="mt-16 grid gap-px overflow-hidden rounded-2xl bg-current/15 sm:grid-cols-2 lg:grid-cols-5">
+                {PROCESS.map((step, i) => (
+                  <Reveal
+                    key={step.n}
+                    delay={i * 80}
+                    as="li"
+                    className="group relative flex flex-col gap-5 bg-ink p-7 transition-colors duration-500 hover:bg-ember dark:bg-surface"
+                  >
+                    <div className="flex items-center justify-between">
+                      <step.icon className="size-7 opacity-70 transition-opacity group-hover:opacity-100" />
+                      <span className="font-mono text-xs opacity-45">{step.n}</span>
+                    </div>
+                    <h3 className="font-display text-xl leading-snug tracking-tight">{step.title}</h3>
+                    <p className="text-sm leading-relaxed opacity-65 transition-opacity group-hover:opacity-90">
+                      {step.body}
+                    </p>
+                  </Reveal>
+                ))}
+              </ol>
+            </Container>
+          </section>
+      ),
+    },
+    {
+      key: "listings",
+      show: sections.listings && featured.length > 0,
+      numbered: true,
+      render: (index) => (
+          <Section id="listings" className="!pt-4">
+            <Reveal>
+              <SectionHeading
+                index={index}
+                eyebrow={listingSeries ? `${seriesLabel(listingSeries)} · on the lot now` : "On the lot now"}
+                title={
+                  listingsHeadline ?? (
+                    <>
+                      Twenty plans.
+                      <br />
+                      Not one of them apologises.
+                    </>
+                  )
+                }
+                lede={
+                  listingsLede ??
+                  `Every plan below is Clayton-built and standing on the lot in ${site.address.city}. Walk through any of them in person, in one afternoon.`
+                }
+                action={
+                  <ButtonLink href="/listings" variant="outline">
+                    See all homes
+                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </ButtonLink>
+                }
+              />
+            </Reveal>
+
+            {/* The four buckets first — most people arrive knowing roughly how
+                wide the ground will take, and nothing else narrows twenty
+                plans as fast. Hidden on a custom page, which is already
+                narrowed to one series. */}
+            {!listingSeries && (
+              <Reveal delay={80}>
+                <SizeCategories className="mt-12" />
+              </Reveal>
+            )}
+
+            <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+              {featured.slice(0, 4).map((listing, i) => (
+                <Reveal key={listing.slug} delay={i * 90}>
+                  <ListingCard listing={listing} priority={i === 0} className="h-full" />
+                </Reveal>
+              ))}
+            </div>
+          </Section>
+      ),
     },
     {
       key: "homeOnLand",
@@ -513,74 +669,12 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
       render: () => <VideoShowcase video={videoShowcase!} />,
     },
     {
-      key: "socialProof",
-      show: sections.socialProof,
-      numbered: true,
-      render: (index) => (
-          <section id="social-proof" className="border-y border-line bg-surface">
-            <Container className="py-20 sm:py-28">
-              <Reveal>
-                <Eyebrow index={index}>From the driveway</Eyebrow>
-              </Reveal>
-              <div className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-line sm:grid-cols-3">
-                {TESTIMONIALS.map((t, i) => (
-                  <Reveal key={i} delay={i * 100} as="figure" className="flex flex-col gap-6 bg-paper p-8">
-                    <Icon.Quote className="size-7 text-ember opacity-60" />
-                    <blockquote className="flex-1 font-display text-lg leading-relaxed tracking-tight text-ink">
-                      {t.quote}
-                    </blockquote>
-                    <figcaption className="border-t border-line pt-5">
-                      <p className="text-sm font-medium text-ink">{t.name}</p>
-                      <p className="mt-1 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-muted">
-                        {t.detail}
-                      </p>
-                    </figcaption>
-                  </Reveal>
-                ))}
-              </div>
-            </Container>
-          </section>
-      ),
-    },
-    {
-      key: "howItWorks",
-      show: sections.howItWorks,
-      numbered: true,
-      render: (index) => (
-          <section id="how-it-works" className="border-y border-line bg-ink text-paper dark:bg-surface dark:text-ink">
-            <Container className="py-20 sm:py-28 lg:py-32">
-              <Reveal>
-                <Eyebrow index={index} className="!text-current opacity-60">
-                  Plan to keys
-                </Eyebrow>
-                <h2 className="mt-5 max-w-2xl font-display text-headline text-balance">
-                  Five steps, eleven weeks,
-                  <br />
-                  one very good Wednesday.
-                </h2>
-              </Reveal>
-
-              <ol className="mt-16 grid gap-px overflow-hidden rounded-2xl bg-current/15 sm:grid-cols-2 lg:grid-cols-5">
-                {PROCESS.map((step, i) => (
-                  <Reveal
-                    key={step.n}
-                    delay={i * 80}
-                    as="li"
-                    className="group relative flex flex-col gap-5 bg-ink p-7 transition-colors duration-500 hover:bg-ember dark:bg-surface"
-                  >
-                    <div className="flex items-center justify-between">
-                      <step.icon className="size-7 opacity-70 transition-opacity group-hover:opacity-100" />
-                      <span className="font-mono text-xs opacity-45">{step.n}</span>
-                    </div>
-                    <h3 className="font-display text-xl leading-snug tracking-tight">{step.title}</h3>
-                    <p className="text-sm leading-relaxed opacity-65 transition-opacity group-hover:opacity-90">
-                      {step.body}
-                    </p>
-                  </Reveal>
-                ))}
-              </ol>
-            </Container>
-          </section>
+      key: "ticker",
+      show: sections.ticker,
+      render: () => (
+          <div className="border-y border-line bg-ink py-4 text-paper dark:bg-surface dark:text-ink">
+            <Marquee items={TICKER} />
+          </div>
       ),
     },
     {
@@ -733,58 +827,6 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
       ),
     },
     {
-      key: "listings",
-      show: sections.listings && featured.length > 0,
-      numbered: true,
-      render: (index) => (
-          <Section id="listings" className="!pt-4">
-            <Reveal>
-              <SectionHeading
-                index={index}
-                eyebrow={listingSeries ? `${seriesLabel(listingSeries)} · on the lot now` : "On the lot now"}
-                title={
-                  listingsHeadline ?? (
-                    <>
-                      Twenty plans.
-                      <br />
-                      Not one of them apologises.
-                    </>
-                  )
-                }
-                lede={
-                  listingsLede ??
-                  `Every plan below is Clayton-built and standing on the lot in ${site.address.city}. Walk through any of them in person, in one afternoon.`
-                }
-                action={
-                  <ButtonLink href="/listings" variant="outline">
-                    See all homes
-                    <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-                  </ButtonLink>
-                }
-              />
-            </Reveal>
-
-            {/* The four buckets first — most people arrive knowing roughly how
-                wide the ground will take, and nothing else narrows twenty
-                plans as fast. Hidden on a custom page, which is already
-                narrowed to one series. */}
-            {!listingSeries && (
-              <Reveal delay={80}>
-                <SizeCategories className="mt-12" />
-              </Reveal>
-            )}
-
-            <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
-              {featured.slice(0, 4).map((listing, i) => (
-                <Reveal key={listing.slug} delay={i * 90}>
-                  <ListingCard listing={listing} priority={i === 0} className="h-full" />
-                </Reveal>
-              ))}
-            </div>
-          </Section>
-      ),
-    },
-    {
       key: "communities",
       show: sections.communities && communities.length > 0,
       numbered: true,
@@ -841,6 +883,56 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
               ))}
             </div>
           </Section>
+      ),
+    },
+    {
+      key: "callBanner",
+      show: sections.callBanner,
+      numbered: true,
+      render: (index) => <CallBanner index={index} />,
+    },
+    {
+      key: "contactForm",
+      show: sections.contactForm,
+      numbered: true,
+      render: (index) => (
+        <Section id="enquire" className="border-t border-line bg-surface">
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+            <Reveal>
+              <SectionHeading
+                index={index}
+                eyebrow="Or write instead"
+                title="Tell us what you're after."
+                lede="Everything we need to give you a real answer rather than a brochure: roughly what you can spend, roughly where you want to be, and how to reach you."
+              />
+              <ul className="mt-10 space-y-4">
+                {[
+                  "We answer within one working day.",
+                  "No credit check to get a figure.",
+                  "We will tell you if we are the wrong dealer for you.",
+                ].map((line) => (
+                  <li key={line} className="flex items-start gap-3 text-[0.95rem] text-ink-soft">
+                    <Icon.Check className="mt-0.5 size-4 shrink-0 text-moss" />
+                    {line}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-10 text-[0.95rem] leading-relaxed text-muted">
+                In a hurry, ring{" "}
+                <a
+                  href={site.phoneHref}
+                  className="font-mono text-ink underline underline-offset-4"
+                >
+                  {site.phone}
+                </a>{" "}
+                instead — {site.hours}.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <ContactBand />
+            </Reveal>
+          </div>
+        </Section>
       ),
     },
     {
@@ -906,6 +998,7 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
           </section>
       ),
     },
+
   ];
 
   let n = 0;

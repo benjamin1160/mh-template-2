@@ -175,7 +175,7 @@ export default function LandDealsPage() {
       />
 
       {/* ── Hero: the headline and the map itself, above the fold ── */}
-      <section className="pb-16 pt-28 sm:pt-36">
+      <section className="pb-16 pt-[calc(var(--chrome-h)+3rem)] sm:pt-[calc(var(--chrome-h)+5rem)]">
         <Container>
           <Eyebrow index="01">
             {HQ.city}, {HQ.state} · {AREAS.length} counties · {SERVICE_RADIUS_MI}-mile radius
@@ -261,7 +261,7 @@ export default function LandDealsPage() {
       </Section>
 
       {/* ── How the deal comes together ── */}
-      <Section id="how" className="scroll-mt-24">
+      <Section id="how" className="scroll-mt-[calc(var(--chrome-h)+1.5rem)]">
         <SectionHeading
           index="02"
           eyebrow="How the deal comes together"
@@ -316,7 +316,7 @@ export default function LandDealsPage() {
       </Section>
 
       {/* ── Pre-approval ── */}
-      <Section id="pre-approval" className="scroll-mt-24 border-t border-line bg-surface">
+      <Section id="pre-approval" className="scroll-mt-[calc(var(--chrome-h)+1.5rem)] border-t border-line bg-surface">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
           <div>
             <SectionHeading
@@ -354,7 +354,7 @@ export default function LandDealsPage() {
       </Section>
 
       {/* ── FAQ ── */}
-      <Section id="faq" className="scroll-mt-24 border-t border-line">
+      <Section id="faq" className="scroll-mt-[calc(var(--chrome-h)+1.5rem)] border-t border-line">
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <SectionHeading index="04" eyebrow="Straight answers" title="The questions we get" />
           <Accordion items={FAQ} />

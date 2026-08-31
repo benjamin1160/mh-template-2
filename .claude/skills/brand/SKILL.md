@@ -134,6 +134,15 @@ out of `components/landing.tsx`, because the next deployment wants it back.
   the footer and the sitemap in the same move.
 - `/privacy-policy` and `/terms` have no switch, on purpose.
 
+The default arrangement is the short, conversion-shaped one: hero, trust row,
+quote form, reviews, how it works, the catalogue, the ways onto land, then the
+call banner, the enquiry form, the hours and the closing scene. The four
+bands that make up the long editorial read — `ticker`, `numbers`, `myth` and
+`cutaway` — ship `false`. Their copy and their artwork are all still in
+`components/landing.tsx`; a dealership that wants the twenty-minute argument
+for a manufactured home turns them back on and gets it, and the numbered
+eyebrows renumber themselves around whatever survives.
+
 Three bands are gated by their data as well as their switch, and stay hidden
 when it is missing: `promotion` needs a live offer in `lib/promotions.ts`,
 `meetTeam` needs somebody in `company.team`, and `videoShowcase` needs a URL
@@ -165,6 +174,30 @@ dealerships in one market both have one. Rewriting it is a separate pass with
 its own rules about which facts may not move — see the `voice` skill, and
 `npm run check:boilerplate` for where a deployment currently stands.
 
+## The phone
+
+A dealership's most valuable page event is a tapped telephone number, so the
+template puts one in four places and each has a switch or a data field behind
+it rather than a hard-coded string:
+
+| Where | File | Switch |
+| --- | --- | --- |
+| The strip above the header — number, hours, licence | `components/call-bar.tsx` | `callBar` in `lib/page-config.ts` |
+| The header, beside the quote button | `components/site-header.tsx` | — |
+| The hero's second call to action | `components/landing.tsx` | — |
+| The band that asks for the call and nothing else | `components/call-banner.tsx` | `sections.callBanner` |
+| The button that follows a visitor down the page | `components/floating-call.tsx` | `floatingCall` |
+
+All five read `site.phone` and `site.phoneHref`, so changing the number in
+`lib/site.ts` changes every one of them.
+
+The call bar publishes its height as `--callbar-h` on `:root`, and everything
+that has to clear the fixed chrome — the sticky filter rail on `/listings`,
+the top padding on every page hero, `scroll-margin` on anchored sections —
+offsets against `--chrome-h`, which is that plus `--header-h`. So turning the
+bar off in `lib/page-config.ts` collapses the offset with it and no page needs
+a second edit. Never hard-code the header height again; read the token.
+
 ## The enquiry form
 
 `components/inquiry-form.tsx` validates and then resolves locally — nothing
@@ -172,6 +205,15 @@ is sent anywhere. To wire it up, replace the `await new Promise(...)` in
 `onSubmit` with a Server Action or a POST to a CRM endpoint. The fields are
 already named sensibly: `name`, `email`, `phone`, `home`, `date`, `slot`,
 `message`, `callFirst`.
+
+The landing page's two forms are different — both post to the
+`requestPreApproval` Server Action in `app/land-deals/actions.ts`, which
+forwards to `LEAD_WEBHOOK_URL` and logs the lead when that is unset.
+`components/quote-form.tsx` is four fields high on the page for somebody who
+will not scroll; `components/contact-band.tsx` is the longer one at the foot
+for somebody who has. They are told apart in the CRM by their `source`, so
+add a new form's source to `LEAD_SOURCES` in `lib/land/lead.ts` rather than
+letting it fall back to the map's.
 
 ## Before finishing
 

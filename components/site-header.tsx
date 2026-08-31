@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CallBar } from "./call-bar";
 import { Logo } from "./logo";
 import { useSavedHomes } from "./saved-homes";
 import { ThemeToggle } from "./theme-toggle";
 import { buttonStyles, cx, Icon } from "./ui";
 import { drawerNav, primaryNav } from "@/lib/navigation";
+import { callBar } from "@/lib/page-config";
 import { site } from "@/lib/site";
 
 export function SiteHeader() {
@@ -23,7 +25,11 @@ export function SiteHeader() {
   useEffect(() => {
     const update = () => {
       const hero = document.querySelector<HTMLElement>("[data-hero-scrim]");
-      setOverlay(!!hero && hero.getBoundingClientRect().bottom > 96);
+      /* Measured rather than assumed: the chrome is a nav bar on its own on
+         some deployments and a nav bar under a phone strip on others. */
+      const chrome =
+        document.querySelector<HTMLElement>("header")?.getBoundingClientRect().height ?? 96;
+      setOverlay(!!hero && hero.getBoundingClientRect().bottom > chrome + 16);
     };
     update();
     window.addEventListener("scroll", update, { passive: true });
@@ -60,15 +66,21 @@ export function SiteHeader() {
         Skip to content
       </a>
 
-      <header
-        className={cx(
-          "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter,color] duration-500",
-          solid
-            ? "border-b border-line bg-paper/85 text-ink backdrop-blur-xl"
-            : "border-b border-transparent text-white",
-        )}
-      >
-        <div className="mx-auto flex h-[4.5rem] w-full max-w-[88rem] items-center gap-6 px-5 sm:px-8 lg:h-20 lg:px-12">
+      <header className="fixed inset-x-0 top-0 z-50">
+        {/* Always opaque, hero or no hero — it is the phone number, and a
+            transparent strip over a photograph is the one place it would stop
+            being readable. */}
+        {callBar && <CallBar />}
+
+        <div
+          className={cx(
+            "transition-[background-color,border-color,backdrop-filter,color] duration-500",
+            solid
+              ? "border-b border-line bg-paper/85 text-ink backdrop-blur-xl"
+              : "border-b border-transparent text-white",
+          )}
+        >
+        <div className="mx-auto flex h-[var(--header-h)] w-full max-w-[88rem] items-center gap-6 px-5 sm:px-8 lg:px-12">
           <Link href="/" className="shrink-0 transition-opacity hover:opacity-70">
             <Logo />
             <span className="sr-only">{site.name} — home</span>
@@ -129,6 +141,24 @@ export function SiteHeader() {
               )}
             />
 
+            {/* The number, spelled out, next to the button that asks for a
+                form. Somebody who is ready to ring should not have to find the
+                footer to do it, and on a phone the whole thing is the tap
+                target rather than a label beside one. */}
+            <a
+              href={site.phoneHref}
+              className={cx(
+                "inline-flex items-center gap-2 rounded-button px-3 py-2 font-mono text-[0.85rem] transition-colors",
+                solid
+                  ? "text-ink hover:bg-surface-2"
+                  : "text-white hover:bg-white/15",
+              )}
+              aria-label={`Call ${site.name} on ${site.phone}`}
+            >
+              <Icon.Phone className="size-4 shrink-0" />
+              <span className="hidden md:inline">{site.phone}</span>
+            </a>
+
             <span className="hidden sm:block">
               <Link
                 href="/contact"
@@ -138,7 +168,7 @@ export function SiteHeader() {
                   !solid && "!bg-white !text-ink hover:!bg-ember hover:!text-on-ember",
                 )}
               >
-                Book a walkthrough
+                Get a free quote
               </Link>
             </span>
 
@@ -157,6 +187,7 @@ export function SiteHeader() {
             </button>
           </div>
         </div>
+        </div>
       </header>
 
       {/* Mobile drawer */}
@@ -172,7 +203,7 @@ export function SiteHeader() {
             small screen to overflow, and a centred flex column puts its top
             items out of scroll range when it does. */}
         <nav
-          className="flex h-full flex-col overflow-y-auto px-6 pb-10 pt-24"
+          className="flex h-full flex-col overflow-y-auto px-6 pb-10 pt-[calc(var(--chrome-h)+2.5rem)]"
           aria-label="Mobile"
         >
           {drawerNav.map((item, i) => (
@@ -191,12 +222,23 @@ export function SiteHeader() {
               </span>
             </Link>
           ))}
+          <a
+            href={site.phoneHref}
+            tabIndex={open ? 0 : -1}
+            className={cx(
+              buttonStyles.primary,
+              "mt-10 w-full !bg-moss !py-4 text-base !text-white dark:!text-paper",
+            )}
+          >
+            <Icon.Phone className="size-5" />
+            Call {site.phone}
+          </a>
           <Link
             href="/contact"
             tabIndex={open ? 0 : -1}
-            className={cx(buttonStyles.primary, "mt-10 w-full !py-4 text-base")}
+            className={cx(buttonStyles.outline, "mt-3 w-full !py-4 text-base")}
           >
-            Book a walkthrough
+            Get a free quote
           </Link>
         </nav>
       </div>
