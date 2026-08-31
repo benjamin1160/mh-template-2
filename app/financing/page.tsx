@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Accordion } from "@/components/accordion";
 import { PageHero } from "@/components/page-hero";
 import { PaymentCalculator } from "@/components/payment-calculator";
@@ -15,6 +16,7 @@ import { company } from "@/lib/company";
 import { market } from "@/lib/market";
 import { hasPrices, priceBounds } from "@/lib/homes";
 import { money } from "@/lib/format";
+import { pages } from "@/lib/page-config";
 
 export const metadata: Metadata = {
   title: "Financing",
@@ -166,6 +168,10 @@ const FAQ = [
 ];
 
 export default function FinancingPage() {
+  /* Turned off in `lib/page-config.ts`, this route sends visitors home rather
+     than 404ing — an indexed link or a printed card outlives the switch. */
+  if (!pages.financing) redirect("/");
+
   return (
     <>
       <PageHero

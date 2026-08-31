@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { InquiryForm } from "@/components/inquiry-form";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/reveal";
 import { Container, Eyebrow, Icon } from "@/components/ui";
 import { communities } from "@/lib/communities";
 import { site } from "@/lib/site";
+import { pages } from "@/lib/page-config";
 
 export const metadata: Metadata = {
   title: "Book a walkthrough",
@@ -31,6 +33,10 @@ const REASONS = [
 ];
 
 export default function ContactPage() {
+  /* Turned off in `lib/page-config.ts`, this route sends visitors home rather
+     than 404ing — an indexed link or a printed card outlives the switch. */
+  if (!pages.contact) redirect("/");
+
   return (
     <>
       <PageHero

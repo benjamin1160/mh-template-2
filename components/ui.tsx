@@ -255,6 +255,29 @@ export const Icon = {
       <path d="m4 12.5 5 5L20 6.5" />
     </svg>
   ),
+  Phone: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <path d="M6.5 3.5h3l1.5 4-2 1.4a12.5 12.5 0 0 0 6.1 6.1l1.4-2 4 1.5v3a2 2 0 0 1-2.2 2A17.5 17.5 0 0 1 4.5 5.7a2 2 0 0 1 2-2.2Z" />
+    </svg>
+  ),
+  Calendar: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
+      <path d="M3.5 10h17M8 3.5v3M16 3.5v3" />
+    </svg>
+  ),
+  Tag: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <path d="M3.5 11.2V4.5a1 1 0 0 1 1-1h6.7a1 1 0 0 1 .7.3l8.3 8.3a1 1 0 0 1 0 1.4l-6.7 6.7a1 1 0 0 1-1.4 0L3.8 11.9a1 1 0 0 1-.3-.7Z" />
+      <circle cx="8" cy="8" r="1.3" />
+    </svg>
+  ),
+  Clock: ({ className }: IconProps) => (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5V12l3 2" />
+    </svg>
+  ),
   Pin: ({ className }: IconProps) => (
     <svg viewBox="0 0 24 24" className={className} aria-hidden {...stroke}>
       <path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z" />

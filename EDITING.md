@@ -6,18 +6,41 @@ conventions are written down in `.claude/skills/`, so any session — this one
 or one six months from now — already knows where things live before you
 explain anything.
 
-Four skills load automatically:
+Five skills load automatically:
 
 | Skill | Covers |
 | --- | --- |
 | `homes` | listings, prices, specs, copy, floor plans |
 | `photos` | every picture on the site |
-| `brand` | company details, colours, fonts, page copy, forms |
+| `brand` | company details, colours, fonts, page copy, forms, which pages and homepage bands exist |
 | `land-deals` | the county price map on `/land-deals` |
+| `voice` | rewriting the editorial copy so two sites do not read alike |
 
 You never have to name one. Say what you want changed and the matching skill
-picks itself up. Typing `/homes`, `/photos`, `/brand` or `/land-deals` forces
-one.
+picks itself up. Typing `/homes`, `/photos`, `/brand`, `/land-deals` or
+`/voice` forces one.
+
+## Pages and homepage bands
+
+The homepage is a list of bands and the site is a list of pages, and both are
+switches in `lib/page-config.ts`. Turning one off is a supported edit: the
+band stops rendering, or the route redirects to `/` and disappears from the
+header, the drawer, the footer and the sitemap together.
+
+> We have no team to show. Drop the "meet the team" band from the homepage.
+
+> Turn the blog on — here is the first post.
+
+> Put a spring promotion on the site: $4,000 off any TRU home through 30
+> April, and say so in the banner under the hero.
+
+> Move the testimonials above the homes on the front page.
+
+> We do not want a blog, a build-a-home wizard or an offers page. Take all
+> three off.
+
+> Add a campaign page at /p/crossmod for the CrossMod homes — same front
+> page, just those homes in the listings band.
 
 ## Homes
 

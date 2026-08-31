@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Accordion } from "@/components/accordion";
 import { LandMap } from "@/components/land-map";
@@ -17,6 +18,7 @@ import { money, shortMoney } from "@/lib/format";
 import { AREAS, BY_PRICE, CHEAPEST, PAYMENT_ASSUMPTIONS } from "@/lib/land/areas";
 import { HQ, SERVICE_RADIUS_MI } from "@/lib/land/geo";
 import { site } from "@/lib/site";
+import { pages } from "@/lib/page-config";
 
 const CHEAPEST_LAND = [...AREAS].sort((a, b) => a.land.low - b.land.low)[0];
 const DEAREST_LAND = Math.max(...AREAS.map((a) => a.land.high));
@@ -159,6 +161,10 @@ const jsonLd = {
 };
 
 export default function LandDealsPage() {
+  /* Turned off in `lib/page-config.ts`, this route sends visitors home rather
+     than 404ing — an indexed link or a printed card outlives the switch. */
+  if (!pages.landDeals) redirect("/");
+
   return (
     <>
       <script
@@ -367,7 +373,7 @@ export default function LandDealsPage() {
         </p>
         <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
           <ButtonLink href="#pre-approval">Get pre-approved</ButtonLink>
-          <ButtonLink href="/homes" variant="outline">
+          <ButtonLink href="/listings" variant="outline">
             See the homes
           </ButtonLink>
         </div>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Scene } from "@/components/artwork/scene";
 import { ListingCard } from "@/components/listing-card";
 import { PageHero } from "@/components/page-hero";
@@ -15,6 +16,7 @@ import {
 import { communities } from "@/lib/communities";
 import { listings } from "@/lib/homes";
 import { money, num } from "@/lib/format";
+import { pages } from "@/lib/page-config";
 
 export const metadata: Metadata = {
   title: "Communities",
@@ -47,6 +49,10 @@ const TENURES = [
 ];
 
 export default function CommunitiesPage() {
+  /* Turned off in `lib/page-config.ts`, this route sends visitors home rather
+     than 404ing — an indexed link or a printed card outlives the switch. */
+  if (!pages.communities) redirect("/");
+
   return (
     <>
       <PageHero

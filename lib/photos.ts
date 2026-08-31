@@ -39,15 +39,19 @@
  * quoting anyone from this site. `node scripts/import-clayton.mjs register`
  * rewrites this map from whatever is under `public/photos`.
  *
- * Page keys the site is wired for: `page/homes`, `page/communities`,
+ * Page keys the site is wired for: `page/homes` (the `/listings` hero — the
+ * key kept its name when the route was renamed), `page/communities`,
  * `page/start-here`, `page/why-manufactured`, `page/financing`,
- * `page/about`, `page/contact`, `page/saved`, `page/not-found`,
- * `page/home-closing` (the closing band on the homepage), and
- * `page/about-team-1` … `page/about-team-4`. The four team portraits have
- * no photographs yet and render as the empty plate.
+ * `page/faq`, `page/prequalify`, `page/promotions`, `page/blog`,
+ * `page/address`, `page/about`, `page/contact`, `page/saved`,
+ * `page/not-found`, `page/home-closing` (the closing band on the homepage),
+ * `page/about-team-1` … `page/about-team-4`, and `blog/<slug>` for a post's
+ * hero. Every one of those with no photograph renders as the empty plate,
+ * which is the correct outcome — it is never filled with a stand-in.
  *
  * The homepage hero is the one image that is NOT listed here: it is
- * imported directly in `app/page.tsx` so it can ship a blur placeholder.
+ * imported directly in `components/landing.tsx` so it can ship a blur
+ * placeholder.
  * `public/photos/hero-home.jpg` is a stock exterior standing in until the
  * lot is photographed — replace the file in place and rewrite its `alt`.
  */

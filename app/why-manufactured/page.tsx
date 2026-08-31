@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { Accordion } from "@/components/accordion";
 import { PageHero } from "@/components/page-hero";
 import { Reveal } from "@/components/reveal";
@@ -11,7 +12,9 @@ import {
   Section,
   SectionHeading,
 } from "@/components/ui";
+import { faq } from "@/lib/faq";
 import { listings } from "@/lib/homes";
+import { pages } from "@/lib/page-config";
 
 export const metadata: Metadata = {
   title: "Why manufactured",
@@ -118,84 +121,6 @@ const HERS_MARKS = [
   { score: 62, label: "Typical new HUD-code home", tone: "ember" },
 ];
 
-const FAQ = [
-  {
-    title: "Is a manufactured home the same as a mobile home?",
-    body: (
-      <>
-        <p>
-          Legally, no. &ldquo;Mobile home&rdquo; refers to anything built before 15 June 1976,
-          when the federal HUD Code took effect. Everything built after that date is a
-          manufactured home, and the two are governed by completely different rules.
-        </p>
-        <p>
-          In conversation people use the terms interchangeably, and we are not going to be
-          precious about it. But if you are reading a loan document, an insurance policy or
-          a zoning ordinance, that date is the line that matters.
-        </p>
-      </>
-    ),
-  },
-  {
-    title: "Can I get a normal mortgage?",
-    body: (
-      <p>
-        On land you own, with the home on a permanent foundation and titled as real
-        property: yes. Conventional, FHA Title II, VA and USDA all lend on manufactured
-        homes that meet those conditions. On a leased pad you are in chattel lending,
-        which is a real loan with real underwriting — just more expensive. Which situation
-        you are in is a decision you make, and we would rather you made it on purpose.
-      </p>
-    ),
-  },
-  {
-    title: "How long do they actually last?",
-    body: (
-      <p>
-        The same as any other house: as long as the roof and the envelope are maintained.
-        HUD-code homes from the early 1980s are still in service across the country. The
-        structural failures people remember are almost entirely pre-1976 units, or
-        post-1976 homes that were never properly anchored — which is a set-crew problem,
-        not a construction problem.
-      </p>
-    ),
-  },
-  {
-    title: "What about wind, snow and earthquakes?",
-    body: (
-      <p>
-        Every home is certified to a wind zone, a roof-load zone and a thermal zone printed
-        on the data plate inside the kitchen cabinet. Ours are built to Wind Zone II and,
-        with the mountain package, a 40 lb ground-snow roof. The anchoring system is
-        engineered and torque-tested. In seismic events, a properly anchored home on
-        engineered piers performs comparably to a site-built home on a stem wall.
-      </p>
-    ),
-  },
-  {
-    title: "Can I put one on my own land?",
-    body: (
-      <p>
-        Usually. The constraints are zoning (some jurisdictions restrict manufactured
-        housing by district), minimum square footage or roof-pitch covenants, access for a
-        14-foot-wide load, and utilities. We check all of it before you spend anything.
-        Send us a parcel number and we will come back within two business days.
-      </p>
-    ),
-  },
-  {
-    title: "Will my neighbours be able to tell?",
-    body: (
-      <p>
-        With a permanent foundation, a continuous perimeter, a site-built porch and a
-        conventional roof pitch — generally not, from the street. The Sablewood exists
-        specifically for buyers who want that. Whether that matters to you is a personal
-        question, and it is a completely reasonable one.
-      </p>
-    ),
-  },
-];
-
 function HersScale() {
   /* Only homes that publish a HERS index count toward the average. */
   const rated = listings.map((l) => l.hers).filter((h): h is number => h !== undefined);
@@ -257,6 +182,10 @@ function HersScale() {
 }
 
 export default function WhyPage() {
+  /* Turned off in `lib/page-config.ts`, this route sends visitors home rather
+     than 404ing — an indexed link or a printed card outlives the switch. */
+  if (!pages.whyManufactured) redirect("/");
+
   return (
     <>
       <PageHero
@@ -447,10 +376,30 @@ export default function WhyPage() {
             index="06"
             eyebrow="Common questions"
             title="The ones we actually get asked."
+            action={
+              pages.faq && faq.length > 6 ? (
+                <ButtonLink href="/faq" variant="outline">
+                  All {faq.length} questions
+                  <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                </ButtonLink>
+              ) : undefined
+            }
           />
         </Reveal>
         <Reveal className="mt-12">
-          <Accordion items={FAQ} defaultOpen={0} />
+          <Accordion
+            items={faq.slice(0, 6).map((item) => ({
+              title: item.question,
+              body: (
+                <>
+                  {item.answer.map((paragraph, i) => (
+                    <p key={i}>{paragraph}</p>
+                  ))}
+                </>
+              ),
+            }))}
+            defaultOpen={0}
+          />
         </Reveal>
 
         <Reveal className="mt-16">

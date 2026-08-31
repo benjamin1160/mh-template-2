@@ -37,7 +37,7 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  props: PageProps<"/homes/[slug]">,
+  props: PageProps<"/listings/[slug]">,
 ): Promise<Metadata> {
   const { slug } = await props.params;
   const listing = getListing(slug);
@@ -55,17 +55,17 @@ export async function generateMetadata(
   return {
     title: `${listing.name} — ${priceText(listing.price)}`,
     description,
-    alternates: { canonical: `/homes/${listing.slug}` },
+    alternates: { canonical: `/listings/${listing.slug}` },
     openGraph: {
       title: `${listing.name} · ${site.short}`,
       description,
-      url: `/homes/${listing.slug}`,
+      url: `/listings/${listing.slug}`,
       type: "article",
     },
   };
 }
 
-export default async function ListingPage(props: PageProps<"/homes/[slug]">) {
+export default async function ListingPage(props: PageProps<"/listings/[slug]">) {
   const { slug } = await props.params;
   const listing = getListing(slug);
   if (!listing) notFound();
@@ -119,8 +119,8 @@ export default async function ListingPage(props: PageProps<"/homes/[slug]">) {
           <ol className="flex flex-wrap items-center gap-2 font-mono text-[0.7rem] uppercase tracking-[0.18em] text-muted">
             {[
               { href: "/", label: "Home" },
-              { href: "/homes", label: "Homes" },
-              { href: `/homes/${listing.slug}`, label: listing.name },
+              { href: "/listings", label: "Homes" },
+              { href: `/listings/${listing.slug}`, label: listing.name },
             ].map((b, i) => (
               <li key={b.href} className="flex items-center gap-2">
                 {i > 0 && <Icon.Chevron className="size-3" />}
@@ -437,7 +437,7 @@ export default async function ListingPage(props: PageProps<"/homes/[slug]">) {
             eyebrow="Close to this one"
             title="If you like this, look at these."
             action={
-              <ButtonLink href="/homes" variant="outline">
+              <ButtonLink href="/listings" variant="outline">
                 All homes
                 <Icon.Arrow className="size-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
               </ButtonLink>

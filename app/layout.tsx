@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Fraunces } from "next/font/google";
+import { FloatingCall } from "@/components/floating-call";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SavedHomesProvider } from "@/components/saved-homes";
+import { floatingCall } from "@/lib/page-config";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -83,6 +85,7 @@ export default function RootLayout({
             {children}
           </main>
           <SiteFooter />
+          {floatingCall && <FloatingCall />}
         </SavedHomesProvider>
       </body>
     </html>

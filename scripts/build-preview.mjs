@@ -37,15 +37,23 @@ const OUT = "preview/index.html";
 /** Routes lead in nav order; everything else follows, sorted. */
 const LEAD = [
   "/",
-  "/homes",
+  "/listings",
+  "/new-home",
   "/communities",
   "/land-deals",
   "/start-here",
   "/financing",
+  "/prequalify",
   "/why-manufactured",
+  "/faq",
+  "/promotions",
+  "/blog",
+  "/address",
   "/about",
   "/contact",
   "/saved",
+  "/privacy-policy",
+  "/terms",
 ];
 
 const MIME = {
