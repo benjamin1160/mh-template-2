@@ -42,6 +42,8 @@ const PAGES = [
   "app/financing/page.tsx",
   "app/contact/page.tsx",
   "components/quote-form.tsx",
+  "components/contact-band.tsx",
+  "components/call-banner.tsx",
   "components/location-hours.tsx",
   "lib/faq.ts",
 ];

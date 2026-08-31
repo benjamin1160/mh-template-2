@@ -29,6 +29,17 @@
   --corner-button: 9999px;
   --corner-card: 1.25rem;
 
+  /* Height of the fixed chrome, so nothing has to guess it.
+     `--header-h` is the nav bar itself. `--callbar-h` is the phone strip
+     above it, which `components/call-bar.tsx` sets to its own height when
+     `callBar` in `lib/page-config.ts` is on and leaves undefined when it is
+     off. `--chrome-h` is the sum, and it is what pages offset against —
+     sticky filter rails, `scroll-margin`, and the top padding of any hero
+     that starts under the bar rather than behind it. */
+  --header-h: 4.5rem;
+  --callbar-h: 0rem;
+  --chrome-h: calc(var(--header-h) + var(--callbar-h));
+
   /* Typefaces. The families are loaded in `app/layout.tsx`; the active skin
      decides which of them these three point at. */
   --font-family-display: var(--font-display-serif), ui-serif, Georgia, serif;
@@ -104,6 +115,12 @@
   --land-tier-3: #4f7f66;
   --land-tier-4: #3a634f;
   --land-tier-5: #2a4a3b;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 5rem;
+  }
 }
 
 @theme inline {

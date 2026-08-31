@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Fraunces, Inter } from "next/font/google";
+import { CALL_BAR_HEIGHT } from "@/components/call-bar";
 import { FloatingCall } from "@/components/floating-call";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SavedHomesProvider } from "@/components/saved-homes";
-import { floatingCall } from "@/lib/page-config";
+import { callBar, floatingCall } from "@/lib/page-config";
 import { skin, skinStyles, type FontChoice } from "@/lib/skin";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -105,6 +106,14 @@ export default function RootLayout({
     >
       <head>
         <style dangerouslySetInnerHTML={{ __html: SKIN_CSS }} />
+        {/* The phone strip's height, published where the rest of the page can
+            offset against it. `app/globals.css` defaults it to zero, so the
+            switch in `lib/page-config.ts` is the only thing to change. */}
+        {callBar && (
+          <style
+            dangerouslySetInnerHTML={{ __html: `:root:root{--callbar-h:${CALL_BAR_HEIGHT}}` }}
+          />
+        )}
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <noscript>
           {/* Scroll reveals start hidden; without JS they must not stay that way. */}

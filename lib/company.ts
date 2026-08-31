@@ -76,6 +76,14 @@ export type Company = {
       Every one is a promise the business has to keep, so write them from what
       it already advertises and delete the rest. */
   badges?: string[];
+  /** Where the business's public reviews live — a Google Business Profile, a
+      Facebook page, a Better Business Bureau listing. The testimonials band
+      links to it so a sceptic can check the quotes against a source we do not
+      control. Omit it and the band simply does not offer the link; do not
+      point it at a profile with no reviews on it. */
+  reviewsUrl?: string;
+  /** What to call that source in the link — "Google", "Facebook". */
+  reviewsLabel?: string;
 
   /** Structural warranty on a new home, in months. Omit to make no warranty claim. */
   warrantyMonths?: number;
@@ -89,6 +97,10 @@ export const company: Company = {
   founded: 1994,
   licenseId: "TN-MHD-0000000",
   badges: ["Financing available", "Delivery and set included", "Own set crew"],
+  /* Placeholder, like the rest of this file — point it at the real profile or
+     delete both lines. `npm run check:placeholders` lists it. */
+  reviewsUrl: "https://www.google.com/maps/search/?api=1&query=Hearthline+Home+Co",
+  reviewsLabel: "Google",
   homesSoldWords: "four thousand",
   teamSize: 9,
   homesOpenOnLot: 4,

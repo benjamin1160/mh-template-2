@@ -1,6 +1,6 @@
 {
   "components/landing.tsx": {
-    "words": 953,
+    "words": 994,
     "hashes": [
       "c2c0849172c9e775",
       "1bae17df57326c52",
@@ -28,6 +28,8 @@
       "3ffd62efbdb6bd48",
       "932065af064fb67e",
       "76bfd5c3cf76357a",
+      "37e1e7a03bd891e0",
+      "89cabc37a3816991",
       "5646f8caacce7415",
       "f0700bb1c5f379f9",
       "ed12b500991a6d09",
@@ -193,6 +195,20 @@
     "words": 27,
     "hashes": [
       "0c9d467b6ad9cc54"
+    ]
+  },
+  "components/contact-band.tsx": {
+    "words": 57,
+    "hashes": [
+      "5b8958071fcd1c60",
+      "96a7735998e79a88",
+      "75f40939ac901839"
+    ]
+  },
+  "components/call-banner.tsx": {
+    "words": 36,
+    "hashes": [
+      "15965b8d02f69877"
     ]
   },
   "components/location-hours.tsx": {

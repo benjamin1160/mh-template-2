@@ -113,7 +113,7 @@ export default function CommunitiesPage() {
             <section
               key={c.slug}
               id={c.slug}
-              className="scroll-mt-24 border-b border-line py-16 sm:py-20"
+              className="scroll-mt-[calc(var(--chrome-h)+1.5rem)] border-b border-line py-16 sm:py-20"
             >
               <Container>
                 <Reveal>

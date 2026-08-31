@@ -29,6 +29,7 @@ export async function requestPreApproval(
     phone: clean(formData.get("phone"), 32),
     email: clean(formData.get("email"), 120),
     county: clean(formData.get("county"), 40),
+    location: clean(formData.get("location"), 80),
     landStatus: clean(formData.get("landStatus"), 40),
     budget: clean(formData.get("budget"), 20),
     notes: clean(formData.get("notes"), 1000),

@@ -232,7 +232,7 @@ export default function FinancingPage() {
       </Section>
 
       {/* Calculator */}
-      <section id="calculator" className="scroll-mt-24 border-y border-line bg-surface">
+      <section id="calculator" className="scroll-mt-[calc(var(--chrome-h)+1.5rem)] border-y border-line bg-surface">
         <Container className="py-20 sm:py-28">
           <Reveal>
             <SectionHeading

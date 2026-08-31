@@ -27,58 +27,79 @@
 export type LandingSection =
   | "hero"
   | "trustRow"
-  | "ticker"
   | "quoteForm"
   | "promotion"
+  | "socialProof"
+  | "howItWorks"
+  | "listings"
   | "homeOnLand"
   | "meetTeam"
   | "videoShowcase"
-  | "socialProof"
-  | "howItWorks"
+  | "ticker"
   | "numbers"
   | "myth"
   | "cutaway"
-  | "listings"
   | "communities"
+  | "callBanner"
+  | "contactForm"
   | "locationHours"
   | "contact";
 
 /** Landing-page bands, in render order. */
 export const sections: Record<LandingSection, boolean> = {
-  /** Full-bleed opening scene with the headline and the two calls to action. */
+  /* ---- The conversion path, in the order a stranger meets it ---------- */
+
+  /** Full-bleed opening scene with the headline and the calls to action. */
   hero: true,
   /** Licence number and the two or three promises, from `lib/company.ts`. */
   trustRow: true,
-  /** The scrolling band of build facts directly under the hero. */
-  ticker: true,
   /** The short lead form, high on the page for somebody who will not scroll. */
   quoteForm: true,
   /** Current offer, drawn from `lib/promotions.ts`. Hidden when none is live. */
   promotion: true,
+  /** What buyers said afterwards. */
+  socialProof: true,
+  /** Plan to keys. */
+  howItWorks: true,
+  /** The featured slice of the catalogue, entered by size. */
+  listings: true,
   /** The three routes onto ground for a buyer who has none. */
   homeOnLand: true,
   /** Named staff from `lib/company.ts`. Hidden when the team is empty. */
   meetTeam: true,
   /** A single video band. Hidden until `videoShowcase` below has a URL. */
   videoShowcase: true,
-  /** What buyers said afterwards. */
-  socialProof: true,
-  /** Plan to keys in five steps. */
-  howItWorks: true,
+
+  /* ---- The long editorial read ---------------------------------------
+     Off by default. This template can be either of two sites: a lean page
+     that asks for the phone call, or the twenty-minute argument for why a
+     manufactured home is a good house. These four bands are the second one,
+     and a dealership that wants it turns them back on here — the copy and
+     the artwork are all still in `components/landing.tsx`.                */
+
+  /** The scrolling band of build facts directly under the hero. */
+  ticker: false,
   /** Industry-wide cost and volume figures. */
-  numbers: true,
+  numbers: false,
   /** The six objections, answered. */
-  myth: true,
+  myth: false,
   /** The cutaway diagram of how a section is built. */
-  cutaway: true,
-  /** The featured slice of the catalogue. */
-  listings: true,
+  cutaway: false,
+
+  /* ---- Closing --------------------------------------------------------- */
+
   /** Communities we place homes into. */
   communities: true,
+  /** The full-width band that asks for the phone call, and nothing else. */
+  callBanner: true,
+  /** The longer enquiry form, for somebody who would rather not ring. */
+  contactForm: true,
   /** Where the lot is and when it is open. */
   locationHours: true,
-  /** Closing call to action. */
-  contact: true,
+  /** The full-bleed closing scene. Off by default: `callBanner` above already
+      asks for the call, and three closing calls to action in a row is one
+      more than anybody answers. Turn it on for a longer, quieter ending. */
+  contact: false,
 };
 
 export type OptionalPage =
@@ -145,3 +166,15 @@ export const videoShowcase: {
  * chrome that follows a visitor around; turn it off for a quieter site.
  */
 export const floatingCall = true;
+
+/**
+ * The phone strip above the header — the number, the hours and the licence,
+ * in the first line of the document.
+ *
+ * It is the loudest thing a dealership site can do about its telephone, which
+ * is why it has a switch: a business whose leads all arrive by form gets a
+ * quieter header without it. Turning it off also collapses `--callbar-h`, so
+ * every offset against the fixed chrome follows automatically — see
+ * `components/call-bar.tsx`.
+ */
+export const callBar = true;
