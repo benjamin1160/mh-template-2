@@ -1,20 +1,52 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Fraunces } from "next/font/google";
+import { Geist, Geist_Mono, Fraunces, Inter } from "next/font/google";
 import { FloatingCall } from "@/components/floating-call";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { SavedHomesProvider } from "@/components/saved-homes";
 import { floatingCall } from "@/lib/page-config";
+import { skin, skinStyles, type FontChoice } from "@/lib/skin";
 import { site } from "@/lib/site";
 import "./globals.css";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
-const display = Fraunces({
-  variable: "--font-display",
+/* Every family a skin can ask for. `next/font` has to see these calls
+   literally to self-host the files at build time, so they are all declared
+   here and the active skin picks between them below — see `lib/skin.ts`.
+   A family no skin uses costs nothing: unreferenced CSS variables do not
+   pull the font files down. */
+const uiSans = Geist({ variable: "--font-ui-sans", subsets: ["latin"] });
+const monoFace = Geist_Mono({ variable: "--font-mono-face", subsets: ["latin"] });
+const displaySerif = Fraunces({
+  variable: "--font-display-serif",
   subsets: ["latin"],
   axes: ["SOFT", "opsz"],
 });
+const grotesk = Inter({ variable: "--font-grotesk", subsets: ["latin"] });
+
+const FONT_VARS: Record<FontChoice, string> = {
+  "display-serif": "--font-display-serif",
+  "ui-sans": "--font-ui-sans",
+  grotesk: "--font-grotesk",
+  mono: "--font-mono-face",
+};
+
+const FONT_FALLBACKS: Record<FontChoice, string> = {
+  "display-serif": "ui-serif, Georgia, serif",
+  "ui-sans": "ui-sans-serif, system-ui, sans-serif",
+  grotesk: "ui-sans-serif, system-ui, sans-serif",
+  mono: "ui-monospace, monospace",
+};
+
+const stack = (choice: FontChoice) =>
+  `var(${FONT_VARS[choice]}), ${FONT_FALLBACKS[choice]}`;
+
+/* The skin's palette, radii and typefaces as one stylesheet, inlined ahead
+   of anything else in the head. */
+const SKIN_CSS =
+  skinStyles() +
+  `:root:root{--font-family-display:${stack(skin.fonts.display)};` +
+  `--font-family-sans:${stack(skin.fonts.sans)};` +
+  `--font-family-mono:${stack(skin.fonts.mono)}}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -69,9 +101,10 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={`${geistSans.variable} ${geistMono.variable} ${display.variable} h-full antialiased`}
+      className={`${uiSans.variable} ${monoFace.variable} ${displaySerif.variable} ${grotesk.variable} h-full antialiased`}
     >
       <head>
+        <style dangerouslySetInnerHTML={{ __html: SKIN_CSS }} />
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         <noscript>
           {/* Scroll reveals start hidden; without JS they must not stay that way. */}

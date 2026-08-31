@@ -26,4 +26,22 @@ export const site = {
     country: "US",
   },
   hours: "Mon–Sat, 9am–6pm · Sunday by appointment",
+  /**
+   * The same opening hours, day by day, for the table on `/address` and the
+   * landing page's location band. It has to agree with `hours` above — the
+   * two are the same fact written twice, and a visitor who finds them
+   * disagreeing will believe neither.
+   *
+   * Delete this and both places fall back to the one-line `hours`, which is
+   * a perfectly good answer for a lot that keeps the same hours all week.
+   */
+  hoursByDay: [
+    { day: "Monday", hours: "9:00 AM – 6:00 PM" },
+    { day: "Tuesday", hours: "9:00 AM – 6:00 PM" },
+    { day: "Wednesday", hours: "9:00 AM – 6:00 PM" },
+    { day: "Thursday", hours: "9:00 AM – 6:00 PM" },
+    { day: "Friday", hours: "9:00 AM – 6:00 PM" },
+    { day: "Saturday", hours: "9:00 AM – 6:00 PM" },
+    { day: "Sunday", hours: "By appointment" },
+  ] as { day: string; hours: string }[] | undefined,
 } as const;

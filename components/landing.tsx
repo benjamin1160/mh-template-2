@@ -26,7 +26,11 @@ import { ListingCard } from "@/components/listing-card";
 import { Marquee } from "@/components/marquee";
 import { MeetTeam } from "@/components/meet-team";
 import { PromotionBanner } from "@/components/promotion-banner";
+import { QuoteForm } from "@/components/quote-form";
 import { Reveal } from "@/components/reveal";
+import { SizeCategories } from "@/components/size-categories";
+import { TrustRow } from "@/components/trust-row";
+import { LocationHours } from "@/components/location-hours";
 import { VideoShowcase } from "@/components/video-showcase";
 import {
   ButtonLink,
@@ -391,12 +395,45 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
       ),
     },
     {
+      key: "trustRow",
+      show: sections.trustRow,
+      render: () => <TrustRow />,
+    },
+    {
       key: "ticker",
       show: sections.ticker,
       render: () => (
           <div className="border-y border-line bg-ink py-4 text-paper dark:bg-surface dark:text-ink">
             <Marquee items={TICKER} />
           </div>
+      ),
+    },
+    {
+      key: "quoteForm",
+      show: sections.quoteForm,
+      numbered: true,
+      render: (index) => (
+        <Section id="quote">
+          <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+            <Reveal>
+              <SectionHeading
+                index={index}
+                eyebrow="Before you fall for a floor plan"
+                title={
+                  <>
+                    Ask the awkward
+                    <br />
+                    question first.
+                  </>
+                }
+                lede="What it costs to actually stand a home on the ground you have — not the sticker on the side of it."
+              />
+            </Reveal>
+            <Reveal delay={120}>
+              <QuoteForm />
+            </Reveal>
+          </div>
+        </Section>
       ),
     },
     {
@@ -727,7 +764,17 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
               />
             </Reveal>
 
-            <div className="mt-14 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            {/* The four buckets first — most people arrive knowing roughly how
+                wide the ground will take, and nothing else narrows twenty
+                plans as fast. Hidden on a custom page, which is already
+                narrowed to one series. */}
+            {!listingSeries && (
+              <Reveal delay={80}>
+                <SizeCategories className="mt-12" />
+              </Reveal>
+            )}
+
+            <div className="mt-6 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
               {featured.slice(0, 4).map((listing, i) => (
                 <Reveal key={listing.slug} delay={i * 90}>
                   <ListingCard listing={listing} priority={i === 0} className="h-full" />
@@ -763,7 +810,7 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
                 <Reveal key={c.slug} delay={i * 90}>
                   <Link
                     href={`/communities#${c.slug}`}
-                    className="group flex h-full flex-col overflow-hidden rounded-[1.25rem] border border-line bg-surface transition-all duration-500 hover:-translate-y-1 hover:border-line-strong"
+                    className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface transition-all duration-500 hover:-translate-y-1 hover:border-line-strong"
                   >
                     <div className="grain relative aspect-[16/10] overflow-hidden">
                       <Scene
@@ -795,6 +842,12 @@ export function Landing({ listingSeries, listingsHeadline, listingsLede }: Landi
             </div>
           </Section>
       ),
+    },
+    {
+      key: "locationHours",
+      show: sections.locationHours,
+      numbered: true,
+      render: (index) => <LocationHours index={index} />,
     },
     {
       key: "contact",

@@ -26,7 +26,9 @@
 
 export type LandingSection =
   | "hero"
+  | "trustRow"
   | "ticker"
+  | "quoteForm"
   | "promotion"
   | "homeOnLand"
   | "meetTeam"
@@ -38,14 +40,19 @@ export type LandingSection =
   | "cutaway"
   | "listings"
   | "communities"
+  | "locationHours"
   | "contact";
 
 /** Landing-page bands, in render order. */
 export const sections: Record<LandingSection, boolean> = {
   /** Full-bleed opening scene with the headline and the two calls to action. */
   hero: true,
+  /** Licence number and the two or three promises, from `lib/company.ts`. */
+  trustRow: true,
   /** The scrolling band of build facts directly under the hero. */
   ticker: true,
+  /** The short lead form, high on the page for somebody who will not scroll. */
+  quoteForm: true,
   /** Current offer, drawn from `lib/promotions.ts`. Hidden when none is live. */
   promotion: true,
   /** The three routes onto ground for a buyer who has none. */
@@ -68,6 +75,8 @@ export const sections: Record<LandingSection, boolean> = {
   listings: true,
   /** Communities we place homes into. */
   communities: true,
+  /** Where the lot is and when it is open. */
+  locationHours: true,
   /** Closing call to action. */
   contact: true,
 };

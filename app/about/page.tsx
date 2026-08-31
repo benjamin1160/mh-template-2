@@ -133,7 +133,7 @@ export default function AboutPage() {
                 const PrincipleIcon = Icon[p.icon];
                 return (
                   <Reveal key={p.title} delay={i * 90}>
-                    <div className="flex h-full gap-5 rounded-[1.25rem] border border-line bg-paper p-8">
+                    <div className="flex h-full gap-5 rounded-card border border-line bg-paper p-8">
                       <span className="grid size-11 shrink-0 place-items-center rounded-full bg-ember text-on-ember">
                         <PrincipleIcon className="size-5" />
                       </span>

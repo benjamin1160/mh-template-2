@@ -87,7 +87,7 @@ export default function CommunitiesPage() {
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
           {TENURES.map((t, i) => (
             <Reveal key={t.name} delay={i * 100}>
-              <div className="flex h-full flex-col rounded-[1.25rem] border border-line bg-surface p-8">
+              <div className="flex h-full flex-col rounded-card border border-line bg-surface p-8">
                 <div className="flex items-center justify-between gap-4">
                   <h3 className="font-display text-2xl tracking-tight text-ink">{t.name}</h3>
                   <Badge tone={t.tone}>{t.verdict}</Badge>
@@ -122,7 +122,7 @@ export default function CommunitiesPage() {
                       i % 2 ? "lg:[&>*:first-child]:order-2" : ""
                     }`}
                   >
-                    <div className="grain relative aspect-[16/11] overflow-hidden rounded-[1.25rem] border border-line">
+                    <div className="grain relative aspect-[16/11] overflow-hidden rounded-card border border-line">
                       <Scene
                         kind="exterior"
                         photoKey={`community/${c.slug}`}

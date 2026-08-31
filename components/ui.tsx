@@ -8,13 +8,15 @@ export function cx(...parts: Array<string | false | null | undefined | 0>) {
 /* ------------------------------------------------------------------ *
  * Buttons
  * ------------------------------------------------------------------ */
+/* `rounded-button` is a skin token, not a fixed shape — Hearthline makes it
+   a full pill, the Direct skin squares it off to 0.75rem. See `lib/skin.ts`. */
 const base =
-  "group/btn relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-[0.9rem] font-medium tracking-tight transition-all duration-300 disabled:pointer-events-none disabled:opacity-45";
+  "group/btn relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-button text-[0.9rem] font-medium tracking-tight transition-all duration-300 disabled:pointer-events-none disabled:opacity-45";
 
 export const buttonStyles = {
   primary: cx(
     base,
-    "bg-ink px-6 py-3 text-paper hover:bg-ember hover:text-on-ember hover:shadow-[0_10px_30px_-12px_rgb(var(--shadow-color)/0.55)] active:scale-[0.98]",
+    "bg-[var(--btn-bg)] px-6 py-3 text-[var(--btn-fg)] hover:bg-[var(--btn-hover-bg)] hover:text-[var(--btn-hover-fg)] hover:shadow-[0_10px_30px_-12px_rgb(var(--shadow-color)/0.55)] active:scale-[0.98]",
   ),
   outline: cx(
     base,

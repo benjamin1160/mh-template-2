@@ -63,7 +63,7 @@ export default function PromotionsPage() {
       <Section>
         {live.length === 0 ? (
           <Reveal>
-            <div className="flex flex-col items-start gap-6 rounded-[1.25rem] border border-line bg-surface p-8 sm:p-12">
+            <div className="flex flex-col items-start gap-6 rounded-card border border-line bg-surface p-8 sm:p-12">
               <span className="grid size-12 place-items-center rounded-full bg-surface-2 text-ember">
                 <Icon.Tag className="size-6" />
               </span>
@@ -94,7 +94,7 @@ export default function PromotionsPage() {
 
               return (
                 <Reveal key={promotion.slug} delay={i * 90}>
-                  <article className="rounded-[1.25rem] border border-line bg-surface p-8 sm:p-12">
+                  <article className="rounded-card border border-line bg-surface p-8 sm:p-12">
                     <p className="font-mono text-[0.7rem] uppercase tracking-[0.2em] text-ember">
                       {promotion.kicker}
                     </p>

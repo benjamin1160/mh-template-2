@@ -211,7 +211,7 @@ export default function FinancingPage() {
         <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {PATHS.map((p, i) => (
             <Reveal key={p.name} delay={i * 80}>
-              <div className="flex h-full flex-col rounded-[1.25rem] border border-line bg-surface p-7">
+              <div className="flex h-full flex-col rounded-card border border-line bg-surface p-7">
                 <div className="flex items-start justify-between gap-4">
                   <h3 className="font-display text-2xl tracking-tight text-ink">{p.name}</h3>
                   <Badge tone={p.tone}>{p.down}</Badge>
@@ -292,7 +292,7 @@ export default function FinancingPage() {
           </Reveal>
 
           <Reveal className="mt-16">
-            <div className="flex flex-col items-start gap-6 rounded-[1.25rem] border border-line bg-paper p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+            <div className="flex flex-col items-start gap-6 rounded-card border border-line bg-paper p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
               <div>
                 <h3 className="font-display text-2xl tracking-tight text-ink">
                   Want a real number instead of an estimate?

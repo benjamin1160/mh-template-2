@@ -8,6 +8,33 @@
  * A warm, editorial palette: limestone paper, ink, ember, deep moss.
  * ------------------------------------------------------------------ */
 :root {
+  /* Hearthline's values, and the fallback for every skin. `lib/skin.ts`
+     overrides whichever of these the active skin names — see `skinStyles`,
+     which is inlined by `app/layout.tsx` with doubled selectors so it always
+     wins here regardless of stylesheet order. Editing this block restyles a
+     single deployment; editing the skin restyles every deployment wearing
+     it. Both are supported. */
+
+  /* The primary button. A skin may override these; left alone the button is
+     ink that turns ember on hover, which is Hearthline's behaviour. They are
+     defined in terms of other tokens, so they follow the light/dark swap
+     without needing a second definition below. */
+  --btn-bg: var(--ink);
+  --btn-fg: var(--paper);
+  --btn-hover-bg: var(--ember);
+  --btn-hover-fg: var(--on-ember);
+
+  /* Corner radii. A skin sets these; components read them through the
+     `rounded-button` / `rounded-card` Tailwind utilities below. */
+  --corner-button: 9999px;
+  --corner-card: 1.25rem;
+
+  /* Typefaces. The families are loaded in `app/layout.tsx`; the active skin
+     decides which of them these three point at. */
+  --font-family-display: var(--font-display-serif), ui-serif, Georgia, serif;
+  --font-family-sans: var(--font-ui-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: var(--font-mono-face), ui-monospace, monospace;
+
   --paper: #f7f4ef;
   --surface: #fffdfa;
   --surface-2: #f0ebe3;
@@ -96,9 +123,12 @@
   --color-gold: var(--gold);
   --color-on-ember: var(--on-ember);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-display: var(--font-display), ui-serif, Georgia, serif;
+  --font-sans: var(--font-family-sans);
+  --font-mono: var(--font-family-mono);
+  --font-display: var(--font-family-display);
+
+  --radius-button: var(--corner-button);
+  --radius-card: var(--corner-card);
 
   --text-display: clamp(2.75rem, 7.5vw, 6.5rem);
   --text-display--line-height: 0.94;
